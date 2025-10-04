@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7868105b08d7314c94a6acc01e86895, type: 3}
+  m_Name: 032.ArmoroftheVoid1
+  m_EditorClassIdentifier: 
+  Name: "\uACF5\uD5C8\uC758 \uAC11\uC637"
+  icon: {fileID: -481751365, guid: ca48f8be9defdba438bf7b98cde0b386, type: 3}
+  description: "\uACF5\uACA9\uC744 15\uD68C \uB9DE\uCDC4\uC744 \uACBD\uC6B0\n3\uCD08
+    \uB3D9\uC548 \uACF5\uACA9\uC744 \uB9C9\uC744 \uC218 \uC788\uB2E4"
+  gradeColor: {r: 0.6313726, g: 0.23921569, b: 0.99607843, a: 1}
+  itemGrade: 2
+  statusData: {fileID: 11400000, guid: 8aae970e0eca5974a8bb78ac35a71980, type: 2}
+  activeEffectName: ArmoroftheVoid

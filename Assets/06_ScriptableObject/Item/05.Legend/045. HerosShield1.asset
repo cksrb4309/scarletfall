@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7868105b08d7314c94a6acc01e86895, type: 3}
+  m_Name: 045. HerosShield1
+  m_EditorClassIdentifier: 
+  Name: "\uC601\uC6C5\uC758 \uBC29\uD328"
+  icon: {fileID: 340600441, guid: ca48f8be9defdba438bf7b98cde0b386, type: 3}
+  description: "\uCCB4\uB825 30% \uC99D\uAC00"
+  gradeColor: {r: 0.8784314, g: 0.34901962, b: 0.4509804, a: 1}
+  itemGrade: 4
+  statusData: {fileID: 11400000, guid: d934fb7261298a64080063b7b06a0e87, type: 2}
+  activeEffectName: 

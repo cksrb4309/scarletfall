@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16e6dde9798c58f4e9b02674f5f12b0d, type: 3}
+  m_Name: Level_4
+  m_EditorClassIdentifier: 
+  mobSetList:
+  - {fileID: 11400000, guid: 50ff5182a1ea0094685a5824afe286ac, type: 2}
+  - {fileID: 11400000, guid: b29225b594a7e5347b03368394f44994, type: 2}
+  - {fileID: 11400000, guid: a9bbc498035d4ab46b9e77cdb43cdb5b, type: 2}
+  - {fileID: 11400000, guid: 2a79031b00be1ad4c9903f4484722f57, type: 2}
+  itemProbability: {fileID: 11400000, guid: 49720722c41fe834cb47222477a7cb5b, type: 2}
+  nextWaveDelay: 4.4
+  spawnDelay: 0.8

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7868105b08d7314c94a6acc01e86895, type: 3}
+  m_Name: 034.KnightsShield1
+  m_EditorClassIdentifier: 
+  Name: "\uAE30\uC0AC\uC758 \uBC29\uD328"
+  icon: {fileID: -1397168804, guid: ca48f8be9defdba438bf7b98cde0b386, type: 3}
+  description: "\uCCB4\uB825 20% \uC99D\uAC00"
+  gradeColor: {r: 0.77254903, g: 0.38039216, b: 0.6901961, a: 1}
+  itemGrade: 3
+  statusData: {fileID: 11400000, guid: 7189ec2927061124cbcbbf5b136ae3e4, type: 2}
+  activeEffectName: 

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7868105b08d7314c94a6acc01e86895, type: 3}
+  m_Name: 009.BreezebladeLeaf1
+  m_EditorClassIdentifier: 
+  Name: "\uC0B0\uB4E4\uBC14\uB78C \uC78E\uC0AC\uADC0"
+  icon: {fileID: -489161339, guid: ca48f8be9defdba438bf7b98cde0b386, type: 3}
+  description: "\uD68C\uD53C \uC2DC \uC0AC\uC6A9\uB418\uB294 \uC2A4\uD0DC\uBBF8\uB098\n5\uCD08\uB9C8\uB2E4
+    1\uD68C \uC2A4\uD0DC\uBBF8\uB098 \uC18C\uBAA8 \uBB34\uD6A8\uD654"
+  gradeColor: {r: 0.6862745, g: 0.6862745, b: 0.6901961, a: 1}
+  statusData: {fileID: 11400000, guid: 8aae970e0eca5974a8bb78ac35a71980, type: 2}
+  activeEffectName: BreezebladeLeaf

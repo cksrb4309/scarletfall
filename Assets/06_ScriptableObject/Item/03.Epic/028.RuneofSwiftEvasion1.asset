@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7868105b08d7314c94a6acc01e86895, type: 3}
+  m_Name: 028.RuneofSwiftEvasion1
+  m_EditorClassIdentifier: 
+  Name: "\uC2E0\uC18D\uD55C \uD68C\uD53C \uB8EC"
+  icon: {fileID: -945076991, guid: ca48f8be9defdba438bf7b98cde0b386, type: 3}
+  description: "\uD68C\uD53C \uD655\uB960 10% \uC99D\uAC00"
+  gradeColor: {r: 0.6313726, g: 0.23921569, b: 0.99607843, a: 1}
+  itemGrade: 2
+  statusData: {fileID: 11400000, guid: d4abc1d4ceb01ba49a6535b292098ee6, type: 2}
+  activeEffectName: 

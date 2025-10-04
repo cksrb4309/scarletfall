@@ -1,0 +1,427 @@
+fileFormatVersion: 2
+guid: b7efcc178b73707488a240d4185fed36
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5509076997750621586
+    second: CHARGE VFX PINK  V2_0
+  - first:
+      213: 8336723315021891595
+    second: CHARGE VFX PINK  V2_1
+  - first:
+      213: 2163844187607422219
+    second: CHARGE VFX PINK  V2_2
+  - first:
+      213: 1174712599163154719
+    second: CHARGE VFX PINK  V2_3
+  - first:
+      213: 2122646085417631264
+    second: CHARGE VFX PINK  V2_4
+  - first:
+      213: 5953319965248985858
+    second: CHARGE VFX PINK  V2_5
+  - first:
+      213: 9137124727015553347
+    second: CHARGE VFX PINK  V2_6
+  - first:
+      213: 5147551397096125486
+    second: CHARGE VFX PINK  V2_7
+  - first:
+      213: 8459829649839844052
+    second: CHARGE VFX PINK  V2_8
+  - first:
+      213: 7799054431747204961
+    second: CHARGE VFX PINK  V2_9
+  - first:
+      213: -841840316528254449
+    second: CHARGE VFX PINK  V2_10
+  - first:
+      213: 2617765405627380761
+    second: CHARGE VFX PINK  V2_11
+  - first:
+      213: 8278297737232241514
+    second: CHARGE VFX PINK  V2_12
+  - first:
+      213: -1460891092218719686
+    second: CHARGE VFX PINK  V2_13
+  - first:
+      213: 5539916962300094584
+    second: CHARGE VFX PINK  V2_14
+  - first:
+      213: 9082560674836833880
+    second: CHARGE VFX PINK  V2_15
+  - first:
+      213: 2611715824373581637
+    second: CHARGE VFX PINK  V2_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 25
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Win64
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_0
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 4
+        width: 14
+        height: 13
+      alignment: 9
+      pivot: {x: 0.53114784, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6a7ccca8a3db83b0800000000000000
+      internalID: -5509076997750621586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_1
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 4
+        width: 10
+        height: 11
+      alignment: 9
+      pivot: {x: 0.42800027, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b08c8966fadf1b370800000000000000
+      internalID: 8336723315021891595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_2
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 5
+        width: 17
+        height: 16
+      alignment: 9
+      pivot: {x: 0.5245406, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0552a7f2d4870e10800000000000000
+      internalID: 2163844187607422219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_3
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 4
+        width: 24
+        height: 18
+      alignment: 9
+      pivot: {x: 0.47227702, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f11bb4292ea6d4010800000000000000
+      internalID: 1174712599163154719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_4
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 4
+        width: 26
+        height: 19
+      alignment: 9
+      pivot: {x: 0.48167068, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02ef0315e57257d10800000000000000
+      internalID: 2122646085417631264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_5
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 4
+        width: 28
+        height: 21
+      alignment: 9
+      pivot: {x: 0.49890518, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20b18e267f07e9250800000000000000
+      internalID: 5953319965248985858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_6
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 4
+        width: 24
+        height: 21
+      alignment: 9
+      pivot: {x: 0.50320625, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 349333657869dce70800000000000000
+      internalID: 9137124727015553347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_7
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 4
+        width: 24
+        height: 18
+      alignment: 9
+      pivot: {x: 0.5155061, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e24faf609b6cf6740800000000000000
+      internalID: 5147551397096125486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CHARGE VFX PINK  V2_8
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 4
+        width: 30
+        height: 13
+      alignment: 9
+      pivot: {x: 0.50339353, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 194d3d69eebc4a1428e799de0cbb5e5c
+      internalID: 8459829649839844052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 568d905ff1b8bf94ba74a0c4db801f3d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      CHARGE VFX PINK  V2_0: -5509076997750621586
+      CHARGE VFX PINK  V2_1: 8336723315021891595
+      CHARGE VFX PINK  V2_2: 2163844187607422219
+      CHARGE VFX PINK  V2_3: 1174712599163154719
+      CHARGE VFX PINK  V2_4: 2122646085417631264
+      CHARGE VFX PINK  V2_5: 5953319965248985858
+      CHARGE VFX PINK  V2_6: 9137124727015553347
+      CHARGE VFX PINK  V2_7: 5147551397096125486
+      CHARGE VFX PINK  V2_8: 8459829649839844052
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

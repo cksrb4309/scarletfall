@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7868105b08d7314c94a6acc01e86895, type: 3}
+  m_Name: 018.BowofOpportunity1
+  m_EditorClassIdentifier: 
+  Name: "\uAE30\uD68C\uC758 \uD65C"
+  icon: {fileID: 1652229721, guid: ca48f8be9defdba438bf7b98cde0b386, type: 3}
+  description: "\uACF5\uACA9 \uC2DC \uC77C\uC815 \uD655\uB960\uB85C\n\uD654\uC0B4\uC744
+    \uBC1C\uC0AC\uD55C\uB2E4"
+  gradeColor: {r: 0.47058824, g: 0.54509807, b: 0.99607843, a: 1}
+  itemGrade: 1
+  statusData: {fileID: 11400000, guid: 8aae970e0eca5974a8bb78ac35a71980, type: 2}
+  activeEffectName: BowofOpportunity

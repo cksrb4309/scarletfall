@@ -97,3 +97,16 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# 외부 에셋 및 상용 플러그인 폴더
+/[Aa]ssets/99_ImportedAssets/
+/[Aa]ssets/External/
+/[Aa]ssets/ThirdParty/
+/[Aa]ssets/Plugins/
+/[Aa]ssets/Imported/
+/[Aa]ssets/AssetStoreTools/
+
+# 에디터에서만 사용하는 설정 파일
+ProjectSettings/EditorBuildSettings.asset
+ProjectSettings/GraphicsSettings.asset
+ProjectSettings/QualitySettings.asset
