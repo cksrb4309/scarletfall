@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
 using DG.Tweening;
+using System;
 
 public class InputKeySettingMenu : MonoBehaviour
 {
@@ -148,7 +149,6 @@ public class InputKeySettingMenu : MonoBehaviour
         
         else if (action.name == "Dash")
             action.ApplyBindingOverride(new InputBinding { path = "<Keyboard>/c" });
-        
     }
 }
 [System.Serializable]
