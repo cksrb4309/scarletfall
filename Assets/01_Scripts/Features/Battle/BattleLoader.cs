@@ -1,13 +1,14 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class BattleLoader : MonoBehaviour
 {
-    public AnimationCurve speedCurve;
     public Collider2D cd;
     public SpriteRenderer blinkSr;
     public GameObject portal;
@@ -17,76 +18,89 @@ public class BattleLoader : MonoBehaviour
     public float alphaSpeed;
 
     public TMP_Text stageTextUI;
-    public RectTransform left;
-    public RectTransform right;
-    public Image leftImage;
-    public Image rightImage;
-    public Sprite redLeft;
-    public Sprite redRight;
+    public CanvasGroup stageTextCanvasGroup;
+
     public Color redTextColor;
     public Image[] parallaxBackgrounds;
     public Sprite[] redBackgrounds;
     public GameObject defaultGround;
     public GameObject redHoodBattleGround;
     public SpriteRenderer outlineSprite;
-    public RectTransform centerRect;
-
-    Vector2 pos;
 
     int stage = -1;
     bool isStageEntered = false;
 
-    float Alpha
+    float BlinkImageAlpha
     {
-        get { return alpha; }
-        set { alpha = value; blinkSr.color = new Color(1, 1, 1, alpha); }
+        get => blinkImageAlpha;
+        set
+        {
+            blinkImageAlpha = value;
+            blinkSr.color = new Color(1, 1, 1, blinkImageAlpha);
+        }
     }
-    float alpha;
-    float baseSizeY;
+    float blinkImageAlpha;
+
+    private Image fadeImage;
+
+    private InputActionReference interactInputAction = null;
+
     bool isCheck = false;
-    bool dir = false;
+    bool blinkAlphaDir = false;
     // dir는 값의 방향으로 true일 때는 증가 false일 때는 알파값을 감소시킴
 
 
     public void BattleLoad()
     {
-        pos.Set(Screen.width * 1.6f, 0);
-
-        centerRect.anchoredPosition = pos;
-
         SoundManager.Play("StartStage", SoundType.Effect);
 
         if (++stage == 10)
         {
             stageTextUI.text = "빨간 망토";
 
-            leftImage.sprite = redLeft;
-            rightImage.sprite = redRight;
-
             stageTextUI.color = redTextColor;
 
             SoundManager.Play("BossBGM", SoundType.Background);
         }
         else
-            stageTextUI.text = "Stage " + (stage+1).ToString();
+        {
+            stageTextUI.text = "Stage " + (stage + 1).ToString();
+        }
 
-        StartCoroutine(LoadCoroutine(HideLobby, Battle.instance.StartBattle));
+        ScreenTransition.Play(
+            startTransition: "Leaf_FadeOut",
+            endTransition: "Leaf_FadeIn",
+            action: () =>
+            {
+                HideLobby();
+                SetRedHoodLevel();
+                DOVirtual.DelayedCall(5f, () => Battle.instance.StartBattle());
+            },
+            fadeStart: 0f,
+            fadeEnd: 0f,
+            duration: 2f);
     }
     public void ClearLoad()
     {
-        pos.Set(Screen.width * 1.6f, 0);
-
-        centerRect.anchoredPosition = pos;
-
+        Debug.Log("Clear Load 호출");
         stageTextUI.text = "Clear";
+        blinkAlphaDir = false;
 
         if (stage != 10)
         {
-            StartCoroutine(
-                LoadCoroutine(ShowLobby,
-                Inventory.instance.selectPanelGroup.StartSelectItem));
+            ScreenTransition.Play(
+            startTransition: "Leaf_FadeOut",
+            endTransition: "Leaf_FadeIn",
+            action: () =>
+            {
+                ShowLobby();
+
+                DOVirtual.DelayedCall(5f, () => Inventory.instance.selectPanelGroup.StartSelectItem());
+            },
+            fadeStart: 0f,
+            fadeEnd: 0f,
+            duration: 2f);
         }
-        dir = false;
     }
     public void ActivePortal()
     {
@@ -111,68 +125,41 @@ public class BattleLoader : MonoBehaviour
         isCheck = false;
     }
 
-    IEnumerator LoadCoroutine(Action mid = null, Action end = null)
+    // 스테이지가 10인 경우에만 설정하는 레벨
+    private void SetRedHoodLevel()
     {
-        float t = 0;
-
-        Vector2 startPos = pos;
-
-        Vector2 midPos = Vector2.zero;
-
-        Vector2 endPos = -pos;
-
-        leftImage.enabled = true;
-        rightImage.enabled = true;
-
-        while (t < 5f)
+        if (stage != 10)
         {
-            t += Time.deltaTime * speedCurve.Evaluate(t/5);
-            
-            centerRect.anchoredPosition = Vector2.Lerp(startPos, midPos, t / 5f);
-
-            yield return null;
+            return;
         }
 
-        centerRect.anchoredPosition = midPos;
-
-        if (mid != null) mid.Invoke();
-
-        if (stage == 10)
+        for (int i = 0; i < parallaxBackgrounds.Length; i++)
         {
-            for (int i = 0; i < parallaxBackgrounds.Length; i++)
-                parallaxBackgrounds[i].sprite = redBackgrounds[i];
-
-            defaultGround.SetActive(false);
-            redHoodBattleGround.SetActive(true);
+            parallaxBackgrounds[i].sprite = redBackgrounds[i];
         }
 
-
-        t = 0;
-
-        startPos = midPos;
-
-        while (t < 5f)
-        {
-            t += Time.deltaTime * speedCurve.Evaluate(t/5);
-
-            centerRect.anchoredPosition = Vector2.Lerp(startPos, endPos, t / 5);
-
-            yield return null;
-        }
-
-        centerRect.anchoredPosition = endPos;
-
-        leftImage.enabled = false;
-        rightImage.enabled = false;
-
-        if (end != null) end.Invoke();
+        defaultGround.SetActive(false);
+        redHoodBattleGround.SetActive(true);
     }
-    // TODO : 상호작용 Input 변경 필요
+    
+    public void StartAnimation()
+    {
+        BlinkImageAlpha = 0;
+        blinkAlphaDir = true;
+    }
+    public void EndAnimation()
+    {
+        isCheck = false;
+        blinkAlphaDir = false;
+    }
+
+    #region 유니티 콜백 함수
+
     private void Update()
     {
         if (!isStageEntered && isCheck)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (interactInputAction.action.WasPressedThisFrame())
             {
                 isStageEntered = true;
 
@@ -188,42 +175,33 @@ public class BattleLoader : MonoBehaviour
     {
         if (!isStageEntered && isCheck)
         {
-            if (dir)
+            if (blinkAlphaDir)
             {
-                if (Alpha < max) Alpha += Time.fixedDeltaTime * alphaSpeed;
-                else dir = false;
+                if (BlinkImageAlpha < max) BlinkImageAlpha += Time.fixedDeltaTime * alphaSpeed;
+                else blinkAlphaDir = false;
             }
             else
             {
-                if (Alpha > min) Alpha -= Time.fixedDeltaTime * alphaSpeed;
-                else dir = true;
+                if (BlinkImageAlpha > min) BlinkImageAlpha -= Time.fixedDeltaTime * alphaSpeed;
+                else blinkAlphaDir = true;
             }
         }
-        else if (Alpha > 0) 
+        else if (BlinkImageAlpha > 0)
         {
-            Alpha -= Time.fixedDeltaTime * alphaSpeed;
+            BlinkImageAlpha -= Time.fixedDeltaTime * alphaSpeed;
         }
         else
         {
             outlineSprite.enabled = false;
         }
-    }
-    public void StartAnimation()
-    {
-        Alpha = 0;
-        dir = true;
-    }
-    public void EndAnimation()
-    {
-        isCheck = false;
-        dir = false;
+        stageTextCanvasGroup.alpha = fadeImage.color.a;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             isCheck = true;
-            
+
             outlineSprite.enabled = true;
 
             StartAnimation();
@@ -240,4 +218,17 @@ public class BattleLoader : MonoBehaviour
             EndAnimation();
         }
     }
+    private void OnEnable()
+    {
+        interactInputAction = InputManager.GetInputAction(InputType.Interact);
+    }
+    private void OnDisable()
+    {
+        InputManager.Release(InputType.Interact);
+    }
+    private void Start()
+    {
+        fadeImage = ScreenTransition.GetFadeImage();
+    }
+    #endregion
 }

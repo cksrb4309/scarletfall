@@ -125,6 +125,7 @@ public class Battle : MonoBehaviour
     public void KillMonster()
     {
         if (!PlayerController.instance.IsAlive) return;
+
         if (currentLevelIndex != levels.Length - 1)
         {
             if (--currentMobCnt == 0 && isSpawn == false)

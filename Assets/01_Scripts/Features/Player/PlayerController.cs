@@ -540,8 +540,6 @@ public class PlayerController : MonoBehaviour
     {
         if (IsAlive)
         {
-            Debug.Log(Inventory.CurrentData.playerAvoidChance.ToString());
-
             if (damage < 0) // 이것은 체력 회복
             {
                 PlayerHp -= damage;

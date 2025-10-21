@@ -9,15 +9,11 @@ public class StackEffect : ActiveEffect
     {
         currentCount++;
 
-        Debug.Log("currentCount:" + currentCount.ToString());
-
         if (currentCount >= needStackCount)
         {
             currentCount = 0;
 
             Play();
-
-            Debug.Log("Play :" + activeEffectName);
         }
     }
     public override void Play()

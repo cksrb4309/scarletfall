@@ -57,14 +57,14 @@ public class Inventory : MonoBehaviour
                 {
                     currentData.Apply(item.statusData);
 
-                    Debug.Log("변화 이후");
-                    string str = "";
-                    str += "플레이어 체력 : " + currentData.playerHp.ToString() + '\n';
-                    str += "플레이어 공격력 : " + currentData.playerDamage.ToString() + '\n';
-                    str += "플레이어 회피 : " + currentData.playerAvoidChance.ToString() + '\n';
-                    str += "플레이어 크확 : " + currentData.playerCriticalChance.ToString() + '\n';
-                    str += "플레이어 스태미나 리젠 : " + currentData.playerStaminaRegen.ToString() + '\n';
-                    Debug.Log(str);
+                    //Debug.Log("변화 이후");
+                    //string str = "";
+                    //str += "플레이어 체력 : " + currentData.playerHp.ToString() + '\n';
+                    //str += "플레이어 공격력 : " + currentData.playerDamage.ToString() + '\n';
+                    //str += "플레이어 회피 : " + currentData.playerAvoidChance.ToString() + '\n';
+                    //str += "플레이어 크확 : " + currentData.playerCriticalChance.ToString() + '\n';
+                    //str += "플레이어 스태미나 리젠 : " + currentData.playerStaminaRegen.ToString() + '\n';
+                    //Debug.Log(str);
                     PlayerController.instance.StatusUpdate();
                 }
 

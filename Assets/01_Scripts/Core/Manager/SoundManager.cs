@@ -41,7 +41,6 @@ public class SoundManager : MonoBehaviour
     }
     public static void Play(string clipName, SoundType type)
     {
-        Debug.Log("clipName : " + clipName.ToString());
         if (type == SoundType.Effect)
         {
             instance.EffectPlay(clipName);
@@ -80,7 +79,6 @@ public class SoundManager : MonoBehaviour
         }
         else if (clipDictionary.ContainsKey(clipName))
         {
-            Debug.Log("clipName:" + clipName.ToString());
             effectAudio.PlayOneShot(clipDictionary[clipName]);
         }
         else
