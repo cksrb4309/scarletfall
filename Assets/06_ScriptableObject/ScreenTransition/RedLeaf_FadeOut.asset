@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce7f32621ad952948a64e211468f75a5, type: 3}
+  m_Name: RedLeaf_FadeOut
+  m_EditorClassIdentifier: 
+  Name: RedLeaf_FadeOut
+  FadeImageColor: {r: 0.5943396, g: 0.09251513, b: 0.09748181, a: 1}
+  TransitionColor: {r: 1, g: 1, b: 1, a: 1}
+  Particle: {fileID: 7110112813498328486, guid: 59197d69ae0705f4dad34d438e11511e, type: 3}
+  Material: {fileID: 2100000, guid: 64347b25029d07e4ab715c49504176e2, type: 2}
+  Length: 2
