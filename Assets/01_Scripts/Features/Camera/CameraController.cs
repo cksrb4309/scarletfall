@@ -2,16 +2,21 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [HideInInspector] public float Vx = 0;
+    [HideInInspector] public float deltaX = 0;
     public CameraLimit cameraLimit = null;
 
     [SerializeField] private Transform PlayerTransform;
+    [SerializeField] private Camera cam;
 
     private Vector3 pos;
+
     private void Start()
     {
-        pos.Set(0, 0, -10f);
+        if (cam == null) cam = Camera.main;
+        pos = transform.position;
+        pos.z = -10f;
     }
+
     private void FixedUpdate()
     {
         pos.x = transform.position.x;
@@ -19,22 +24,24 @@ public class CameraController : MonoBehaviour
         if (Mathf.Abs(pos.x - PlayerTransform.position.x) > 0.1f)
         {
             float before = pos.x;
-
             pos.x = Mathf.Lerp(pos.x, PlayerTransform.position.x, 0.1f);
 
-            bool isCheck = true;
-
-            if (cameraLimit != null) isCheck = cameraLimit.IsLimit(pos.x, pos.y);
-
-            if (isCheck)
+            if (cameraLimit != null)
             {
-                Vx = pos.x - before;
+                // 카메라 반 너비(화면 절반)
+                float halfWidth = cam.orthographicSize * cam.aspect;
 
-                transform.position = pos;
+                // 카메라가 보여주는 실제 영역 기준으로 제한
+                float leftLimit = cameraLimit.left + halfWidth;
+                float rightLimit = cameraLimit.right - halfWidth;
+
+                pos.x = Mathf.Clamp(pos.x, leftLimit, rightLimit);
             }
-            else Vx = 0;
+
+            deltaX = pos.x - before;
+            transform.position = pos;
         }
-        else Vx = 0;
+        else deltaX = 0;
     }
 
     public void SetLimit(CameraLimit cameraLimit)

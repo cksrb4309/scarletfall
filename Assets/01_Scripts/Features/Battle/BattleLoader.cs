@@ -66,10 +66,9 @@ public class BattleLoader : MonoBehaviour
         {
             stageTextUI.text = "Stage " + (stage + 1).ToString();
         }
-
         ScreenTransition.Play(
-            startTransition: "Leaf_FadeOut",
-            endTransition: "Leaf_FadeIn",
+            startTransition: stage < 10 ? "Leaf_FadeOut" : "RedLeaf_FadeOut",
+            endTransition: stage < 10 ? "Leaf_FadeIn" : "RedLeaf_FadeIn",
             action: () =>
             {
                 HideLobby();
@@ -82,7 +81,6 @@ public class BattleLoader : MonoBehaviour
     }
     public void ClearLoad()
     {
-        Debug.Log("Clear Load 호출");
         stageTextUI.text = "Clear";
         blinkAlphaDir = false;
 
@@ -151,6 +149,12 @@ public class BattleLoader : MonoBehaviour
     {
         isCheck = false;
         blinkAlphaDir = false;
+    }
+
+    public void DisableStageText()
+    {
+        stageTextUI.text = string.Empty;
+        stageTextUI.enabled = false;
     }
 
     #region 유니티 콜백 함수

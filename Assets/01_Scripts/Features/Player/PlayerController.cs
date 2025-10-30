@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -22,17 +23,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Image hpFillImage;
     [SerializeField] Image spFillImage;
     [SerializeField] Collider2D bottomCollider;
-    [SerializeField] float[] moveSpeed;
-    [SerializeField] float[] jumpSpeed;
-    [SerializeField] float lastJumpSwing = -15f;
-    [SerializeField] float rollRange = 5;
-    [SerializeField] float rollSpeed = 2f;
-    [SerializeField] float[] playerMaxHpBase;
-    [SerializeField] float[] playerMaxSp;
-    [SerializeField] float swingUseStamina = 15f;
-    [SerializeField] float[] rollUseStamina;
-    [SerializeField] float[] jumpUseStamina;
-    [SerializeField] float[] staminaRegenSpeed;
 
     InputActionReference moveLeftInputAction = null;
     InputActionReference moveRightInputAction = null;
@@ -43,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     float playerMaxHp;
 
-    [SerializeField] float fastDownAttackSpeed = -10f;
+    [SerializeField] float fastDownAttackSpeed = -15;
 
     Rigidbody2D rb;
     Animator ar;
@@ -51,41 +41,22 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Dir currentDir = Dir.Right;
     Dir beforeDir = Dir.Right;
     PlayerState ps = PlayerState.Idle;
-    PlayerState pbs = PlayerState.Idle;
     Vector3 scale = Vector3.one;
 
     float playerHp = 10;
     float playerSp = 10;
     float beforeHpMaxRatio = 1f;
 
-    int swingCombo = 0;
-    int jumpSwingCombo = 0;
-
-    bool invincibility = false; // true일 시 무적
-    bool swingCheck = false;
-    bool isStop = false;
-    bool isAttacking = false;
-    bool jumpUse = false;
-    bool jumping = false;
-    bool rolling = false;
-    bool dieCheck = false;
-    bool fastDownAttackCheck = false;
-    bool fastDownAttacking = false;
-    bool preventNextAction = false;
-    [HideInInspector] public bool leaf = false; // 아이템으로 인해 스태미나 소모가 필요없을 때
-    [HideInInspector] public bool shield = false; // 아이템으로 인해 공격을 막을 수 있을 때
     float PlayerSp {
         get { return playerSp; }
         set {
             playerSp = value;
             spFillImage.fillAmount =
                 playerSp < 0 ?
-                0 : playerSp / playerMaxSp[(int)Option.difficulty];
-            spText.text = playerSp.ToString("F0") + " / " + playerMaxSp[(int)Option.difficulty].ToString();
+                0 : playerSp / PlayerStat.Value.PlayerMaxSp;
+            spText.text = playerSp.ToString("F0") + " / " + PlayerStat.Value.PlayerMaxSp.ToString();
         }
     }
-
-
     private float PlayerHp
     {
         get { return playerHp; }
@@ -101,6 +72,66 @@ public class PlayerController : MonoBehaviour
     }
     public bool IsAlive { get { return playerHp > 0; } }
 
+    public PlayerState Ps
+    {
+        get => ps;
+
+        set
+        {
+            if (ps == value) return;
+
+            ps = value;
+
+            switch (ps)
+            {
+                case PlayerState.Idle: ar.SetTrigger("Idle"); break;
+                case PlayerState.Run: ar.SetTrigger("Run"); break;
+                case PlayerState.Roll: ar.SetTrigger("Roll"); break;
+                case PlayerState.Fall: ar.SetTrigger("Fall"); break;
+                case PlayerState.Jump: ar.SetTrigger("Jump"); break;
+
+                case PlayerState.Swing1:
+                    ar.SetTrigger("Swing1");
+                    if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); }
+                    break;
+
+                case PlayerState.Swing2:
+                    ar.SetTrigger("Swing2");
+                    if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); }
+                    break;
+
+                case PlayerState.Swing3:
+                    ar.SetTrigger("Swing3");
+                    if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); }
+                    break;
+
+                case PlayerState.JumpSwing1:
+                    ar.SetTrigger("JumpSwing1");
+                    if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); }
+                    break;
+
+                case PlayerState.JumpSwing2:
+                    ar.SetTrigger("JumpSwing2");
+                    if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); }
+                    break;
+
+                case PlayerState.JumpSwing3:
+                    ar.SetTrigger("JumpSwing3");
+                    if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); }
+                    break;
+            }
+        }
+    }
+    private bool SetPlayerState(PlayerState ps)
+    {
+        if (Ps == ps || PlayerFlags.Value.TriggerLocked) return false;
+
+        Ps = ps;
+
+        PlayerFlags.Value.TriggerLocked = true;
+
+        return true;
+    }
     private void Awake()
     {
         instance = this;
@@ -113,10 +144,10 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         ar = GetComponent<Animator>();
 
-        playerMaxHp = playerMaxHpBase[(int)Option.difficulty];
+        playerMaxHp = PlayerStat.Value.PlayerMaxHpBase;
 
         PlayerHp = playerMaxHp;
-        PlayerSp = playerMaxSp[(int)Option.difficulty];
+        PlayerSp = PlayerStat.Value.PlayerMaxSp;
     }
     private void OnEnable()
     {
@@ -138,21 +169,21 @@ public class PlayerController : MonoBehaviour
     }
     public void Update()
     {
-        if (preventNextAction == true) return;
+        PlayerFlags.Value.TriggerLocked = false;
 
         if (jumpInputAction.action.WasPressedThisFrame())
         {
-            if (preventNextAction) return;
             Jump();
         }
         else if (attackInputAction.action.WasPressedThisFrame())
         {
-            if (preventNextAction) return;
-            if (swingCheck == false) swingCheck = true;
+            if (PlayerFlags.Value.SwingCheck == false)
+            {
+                PlayerFlags.Value.SwingCheck = true;
+            }
         }
         else if (rollInputAction.action.WasPressedThisFrame())
         {
-            if (preventNextAction) return;
             Roll();
         }
         else if (moveDownInputAction.action.WasPressedThisFrame())
@@ -160,19 +191,18 @@ public class PlayerController : MonoBehaviour
             FastDownAttack();
         }
     }
+    Coroutine fastDownAttackCheckCoroutine = null;
     void FastDownAttack()
     {
-        if ((ps == PlayerState.Jump || ps == PlayerState.Fall) && !fastDownAttacking)
+        if ((Ps == PlayerState.Jump || Ps == PlayerState.Fall) && !PlayerFlags.Value.FastDownAttacking)
         {
-            if (fastDownAttackCheck == false)
+            if (PlayerFlags.Value.FastDownAttackCheck == false)
             {
-                StartCoroutine(FastDownAttackDelayCoroutine());
+                fastDownAttackCheckCoroutine = StartCoroutine(FastDownAttackDelayCoroutine());
             }
             else
             {
-                StopCoroutine(FastDownAttackDelayCoroutine());
-
-                fastDownAttacking = true;
+                StopCoroutine(fastDownAttackCheckCoroutine);
 
                 StartCoroutine(FastDownAttackCoroutine());
             }
@@ -181,12 +211,16 @@ public class PlayerController : MonoBehaviour
     IEnumerator FastDownAttackCoroutine()
     {
         // 빠른 낙하 공격을 위한 기본 세팅
+        if (Ps != PlayerState.Fall)
+        {
+            while (!SetPlayerState(PlayerState.Fall)) yield return null;
+        }
 
         rb.bodyType = RigidbodyType2D.Kinematic; // 중력 적용 X
 
         rb.linearVelocityY = fastDownAttackSpeed; // 속도 변화
 
-        ps = PlayerState.Fall; // 떨어지는 상태로 전환
+        PlayerFlags.Value.FastDownAttacking = true;
 
         while (transform.position.y > -3.2f) yield return null; // 땅에 근접할 때까지 반복
 
@@ -194,26 +228,24 @@ public class PlayerController : MonoBehaviour
 
         fastDownEffect.Enable(transform.position);
 
-        fastDownAttacking = false;
-
-        ps = PlayerState.Idle; // 가만히 있는 상태로 전환
+        PlayerFlags.Value.FastDownAttackCheck = false;
+        PlayerFlags.Value.FastDownAttacking = false;
+        PlayerFlags.Value.JumpUse = false;
+        PlayerFlags.Value.Jumping = false;
 
         rb.linearVelocityY = 0;
-
         rb.bodyType = RigidbodyType2D.Dynamic;
     }
     IEnumerator FastDownAttackDelayCoroutine()
     {
-        fastDownAttackCheck = true;
+        PlayerFlags.Value.FastDownAttackCheck = true;
 
         yield return new WaitForSeconds(0.2f);
 
-        fastDownAttackCheck = false;
+        PlayerFlags.Value.FastDownAttackCheck = false;
     }
     public void StatusUpdate()
     {
-        Debug.Log(beforeHpMaxRatio.ToString() + " / " + Inventory.CurrentData.playerHp);
-
         // 플레이어의 최대 HP를 늘렸을 때
         if (beforeHpMaxRatio != Inventory.CurrentData.playerHp)
         {
@@ -221,7 +253,7 @@ public class PlayerController : MonoBehaviour
 
             float beforeHpMax = playerMaxHp;
 
-            playerMaxHp = playerMaxHpBase[(int)Option.difficulty] * Inventory.CurrentData.playerHp;
+            playerMaxHp = PlayerStat.Value.PlayerMaxHpBase * Inventory.CurrentData.playerHp;
 
             float distance = playerMaxHp - beforeHpMax;
 
@@ -231,46 +263,38 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         // 현재 점프를 사용하지 않았다면
-        if (jumpUse == false)
+        if (PlayerFlags.Value.JumpUse == false)
         {
-            if (preventNextAction) return;
-            if ((ps == PlayerState.Idle || ps == PlayerState.Run) && UseStamina(jumpUseStamina[(int)Option.difficulty]))
+            if ((Ps == PlayerState.Idle || Ps == PlayerState.Run) && !PlayerFlags.Value.TriggerLocked && TryUseStamina(PlayerStat.Value.JumpUseStamina))
             {
-                preventNextAction = true;
+                SetPlayerState(PlayerState.Jump);
 
-                ps = PlayerState.Jump;
-
-                jumpUse = true;
+                PlayerFlags.Value.JumpUse = true;
             }
         }
     }
     private void Swing()
     {
-        if (fastDownAttacking == true) return;
+        if (PlayerFlags.Value.FastDownAttacking == true) return;
 
-        if (preventNextAction) return;
-
-        if (ps == PlayerState.Jump || ps == PlayerState.Fall || ps == PlayerState.JumpSwing1 || ps == PlayerState.JumpSwing2 || ps == PlayerState.JumpSwing3)
+        if (Ps == PlayerState.Jump || Ps == PlayerState.Fall || Ps == PlayerState.JumpSwing1 || Ps == PlayerState.JumpSwing2 || Ps == PlayerState.JumpSwing3)
         {
-            if (!rolling)
+            if (!PlayerFlags.Value.Rolling)
             {
-                if (!isAttacking)
+                if (!PlayerFlags.Value.IsAttacking)
                 {
-                    if (UseStamina(swingUseStamina))
+                    if (!PlayerFlags.Value.TriggerLocked && TryUseStamina(PlayerStat.Value.SwingUseStamina))
                     {
-                        preventNextAction = true;
-
                         CancelInvoke();
 
-                        isAttacking = true;
+                        PlayerFlags.Value.IsAttacking = true;
+                        PlayerFlags.Value.IsStop = true;
 
-                        isStop = true;
+                        if (PlayerFlags.Value.JumpSwingCombo++ > 0)
+                            if (PlayerFlags.Value.JumpSwingCombo == 4)
+                                PlayerFlags.Value.JumpSwingCombo = 1;
 
-                        if (jumpSwingCombo++ > 0)
-                            if (jumpSwingCombo == 4)
-                                jumpSwingCombo = 1;
-
-                        ps = (PlayerState)(jumpSwingCombo + 12);
+                        SetPlayerState((PlayerState)(PlayerFlags.Value.JumpSwingCombo + 12));
 
                         rb.linearVelocityY = 0;
 
@@ -279,23 +303,20 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        else if (!rolling)
+        else if (!PlayerFlags.Value.Rolling)
         {
-            if (!isAttacking && UseStamina(swingUseStamina))
+            if (!PlayerFlags.Value.IsAttacking && !PlayerFlags.Value.TriggerLocked && TryUseStamina(PlayerStat.Value.SwingUseStamina))
             {
-                preventNextAction = true;
-
                 CancelInvoke();
 
-                isAttacking = true;
+                PlayerFlags.Value.IsAttacking = true;
+                PlayerFlags.Value.IsStop = true;
 
-                isStop = true;
+                if (PlayerFlags.Value.SwingCombo++ > 0)
+                    if (PlayerFlags.Value.SwingCombo == 4)
+                        PlayerFlags.Value.SwingCombo = 1;
 
-                if (swingCombo++ > 0)
-                    if (swingCombo == 4)
-                        swingCombo = 1;
-
-                ps = (PlayerState)(swingCombo + 9);
+                SetPlayerState((PlayerState)(PlayerFlags.Value.SwingCombo + 9));
             }
         }
 
@@ -326,52 +347,58 @@ public class PlayerController : MonoBehaviour
     {
         if (IsAlive == false)
         {
-            if (dieCheck == false)
+            if (PlayerFlags.Value.DieCheck == false)
             {
-                dieCheck = true;
+                PlayerFlags.Value.DieCheck = true;
                 rb.linearVelocityY = 0;
                 rb.linearVelocityX = 0;
             }
             return;
         }
-        PlayerSp += Time.fixedDeltaTime * staminaRegenSpeed[(int)Option.difficulty] * Inventory.CurrentData.playerStaminaRegen;
-        if (PlayerSp > playerMaxSp[(int)Option.difficulty]) PlayerSp = playerMaxSp[(int)Option.difficulty];
+        PlayerSp += Time.fixedDeltaTime * PlayerStat.Value.StaminaRegenSpeed * Inventory.CurrentData.playerStaminaRegen;
+        if (PlayerSp > PlayerStat.Value.PlayerMaxSp) PlayerSp = PlayerStat.Value.PlayerMaxSp;
 
-
-        if (ps == PlayerState.Fall || ps == PlayerState.Idle || ps == PlayerState.Run)
+        if (Ps == PlayerState.Fall)
         {
             if (bottomCollider.IsTouching(filter))
             {
-                if (ps == PlayerState.Fall)
-                    SoundManager.Play("PlayerLand", SoundType.Effect);
+                SoundManager.Play("PlayerLand", SoundType.Effect);
 
-                ps = PlayerState.Idle;
-                jumping = false;
-                jumpUse = false;
+                if (SetPlayerState(PlayerState.Idle))
+                {
+                    PlayerFlags.Value.Jumping = false;
+                    PlayerFlags.Value.JumpUse = false;
+                }
             }
         }
+        //if (Ps == PlayerState.Idle || Ps == PlayerState.Run)
+        //{
+
+        //}
 
 
-        if (jumpUse == true && jumping == false)
+        if (PlayerFlags.Value.JumpUse == true && PlayerFlags.Value.Jumping == false)
         {
-            jumping = true;
+            PlayerFlags.Value.Jumping = true;
 
             rb.linearVelocityY = 0;
-            rb.AddForceY(jumpSpeed[(int)Option.difficulty], ForceMode2D.Impulse);
+            rb.AddForceY(PlayerStat.Value.JumpSpeed, ForceMode2D.Impulse);
         }
 
         // 만약 현재 상태가 점프일 때,
         // 플레이어가 떨어지고 있으면
         // 현재 상태를 추락중으로 변경한다.
-        if (ps == PlayerState.Jump)
-            if (rb.linearVelocityY < 0)
-                ps = PlayerState.Fall;
+        if (Ps == PlayerState.Jump && rb.linearVelocityY < 0)
+        {
+            SetPlayerState(PlayerState.Fall);
+        }
 
         float x = 0;
+
         if (moveLeftInputAction.action.IsPressed()) x -= 1;
         if (moveRightInputAction.action.IsPressed()) x += 1;
 
-        if (!isStop)
+        if (!PlayerFlags.Value.IsStop)
         {
             if (x == 1) currentDir = Dir.Right;
 
@@ -385,77 +412,60 @@ public class PlayerController : MonoBehaviour
             }
             if (x != 0)
             {
+                if (Ps == PlayerState.Idle)
+                {
+                    SetPlayerState(PlayerState.Run);
+                }
 
-                if (ps == PlayerState.Idle) ps = PlayerState.Run;
-
-                rb.linearVelocityX = x * moveSpeed[(int)Option.difficulty] * Time.fixedDeltaTime * Inventory.CurrentData.playerMoveSpeed;
+                rb.linearVelocityX = x * PlayerStat.Value.MoveSpeed * Time.fixedDeltaTime * Inventory.CurrentData.playerMoveSpeed;
             }
-            else if (ps == PlayerState.Run) ps = PlayerState.Idle;
+            else if (Ps == PlayerState.Run)
+            {
+                SetPlayerState(PlayerState.Idle);
+            }
         }
         else rb.linearVelocityX = 0;
 
         if (x == 0) rb.linearVelocityX = 0;
 
         // 공격 입력 부분
-        if (swingCheck)
+        if (PlayerFlags.Value.SwingCheck)
         {
             Swing();
-            swingCheck = false;
-        }
-
-        // 현재 플레이어 상태가 갱신 되었을 때
-        if (ps != pbs)
-        {
-            pbs = ps;
-
-            preventNextAction = false;
-
-            switch (ps)
-            {
-                case PlayerState.Idle: ar.SetTrigger("Idle"); break;
-                case PlayerState.Run: ar.SetTrigger("Run"); break;
-                case PlayerState.Roll: ar.SetTrigger("Roll"); break;
-                case PlayerState.Fall: ar.SetTrigger("Fall"); break;
-                case PlayerState.Jump: ar.SetTrigger("Jump"); break;
-                case PlayerState.Swing1: ar.SetTrigger("Swing1"); if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); } break;
-                case PlayerState.Swing2: ar.SetTrigger("Swing2"); if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); } break;
-                case PlayerState.Swing3: ar.SetTrigger("Swing3"); if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); } break;
-                case PlayerState.JumpSwing1: ar.SetTrigger("JumpSwing1"); if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); } break;
-                case PlayerState.JumpSwing2: ar.SetTrigger("JumpSwing2");  if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); } break;
-                case PlayerState.JumpSwing3: ar.SetTrigger("JumpSwing3");  if (mpc != null) { mpc.SetAnimation(ps, transform.position, currentDir); } break;
-            }
+            PlayerFlags.Value.SwingCheck = false;
         }
     }
     void RollEnd()
     {
-        isStop = false;
-        rolling = false;
+        PlayerFlags.Value.IsStop = false;
+        PlayerFlags.Value.Rolling = false;
 
-        if (rb.linearVelocityY < 0) ps = PlayerState.Fall;
+        if (rb.linearVelocityY < 0)
+        {
+            SetPlayerState(PlayerState.Fall);
+        }
+        else
+        {
+            SetPlayerState(PlayerState.Idle);
 
-        else {
-            ps = PlayerState.Idle;
-
-            jumping = false;
-            jumpUse = false;
+            PlayerFlags.Value.Jumping = false;
+            PlayerFlags.Value.JumpUse = false;
         }
     }
     private void Roll()
     {
-        if (fastDownAttacking == true) return;
+        if (PlayerFlags.Value.FastDownAttacking == true) return;
 
-        if (!rolling && (leaf || UseStamina(rollUseStamina[(int)Option.difficulty])))
+        if (!PlayerFlags.Value.Rolling && !PlayerFlags.Value.TriggerLocked && (PlayerFlags.Value.Leaf || TryUseStamina(PlayerStat.Value.RollUseStamina)))
         {
+            SetPlayerState(PlayerState.Roll);
 
             SoundManager.Play("PlayerRoll", SoundType.Effect);
 
-            leaf = false;
-            isStop = true;
-            rolling = true;
-            isAttacking = false;
-
-            ps = PlayerState.Roll;
-            ar.SetTrigger("Roll");
+            PlayerFlags.Value.Leaf = false;
+            PlayerFlags.Value.IsStop = true;
+            PlayerFlags.Value.Rolling = true;
+            PlayerFlags.Value.IsAttacking = false;
 
             rb.bodyType = RigidbodyType2D.Dynamic;
             rb.linearVelocityY = 0;
@@ -468,11 +478,11 @@ public class PlayerController : MonoBehaviour
         double t = 0;
 
         float startPos = transform.position.x;
-        float endPos = transform.position.x + (rollRange * (int)currentDir * Inventory.CurrentData.rollRange);
+        float endPos = transform.position.x + (PlayerStat.Value.RollRange * (int)currentDir * Inventory.CurrentData.rollRange);
 
         while (t < 1f)
         {
-            t += Time.deltaTime * rollSpeed;
+            t += Time.deltaTime * PlayerStat.Value.RollSpeed;
             transform.position = new Vector3(Mathf.Lerp(startPos, endPos, (float)t), transform.position.y, transform.position.z);
             yield return null;
         }
@@ -480,61 +490,56 @@ public class PlayerController : MonoBehaviour
     }
     void EnableCombo() // 콤보 공격 활성화 구간
     {
-        isAttacking = false;
+        PlayerFlags.Value.IsAttacking = false;
 
         Invoke("DisableCombo", .7f);
     }
     void EnableJumpCombo() // 콤보 공격 활성화 구간
     {
-        isAttacking = false;
+        PlayerFlags.Value.IsAttacking = false;
 
         Invoke("DisableJumpCombo", .7f);
     }
     void DisableCombo()
     {
-        swingCombo = 0;
+        PlayerFlags.Value.SwingCombo = 0;
     }
     void DisableJumpCombo()
     {
-        jumpSwingCombo = 0;
+        PlayerFlags.Value.JumpSwingCombo = 0;
     }
     void EnableIdle() // 이동 및 회전 활성화 구간
     {
-        ps = PlayerState.Idle;
+        SetPlayerState(PlayerState.Idle);
 
-        isStop = false;
-
-        isAttacking = false;
+        PlayerFlags.Value.IsStop = false;
+        PlayerFlags.Value.IsAttacking = false;
     }
     void EnableJumpIdle() // 점프 공격 중에 이동 및 회전 활성화 구간
     {
-        ps = PlayerState.Fall;
-
-        isStop = false;
-
-        isAttacking = false;
+        SetPlayerState(PlayerState.Fall);
 
         rb.bodyType = RigidbodyType2D.Dynamic;
+
+        PlayerFlags.Value.IsStop = false;
+        PlayerFlags.Value.IsAttacking = false;
     }
     void LastJumpSwing()
     {
-        rb.linearVelocityY = lastJumpSwing;
+        rb.linearVelocityY = PlayerStat.Value.LastJumpSwing;
     }
     public void TouchGround()
     {
-        ps = PlayerState.Idle;
-
-        isStop = false;
-
-        isAttacking = false;
+        SetPlayerState(PlayerState.Idle);
 
         rb.bodyType = RigidbodyType2D.Dynamic;
 
         rb.linearVelocityY = 0;
 
-        jumpUse = false;
-
-        jumping = false;
+        PlayerFlags.Value.IsStop = false;
+        PlayerFlags.Value.IsAttacking = false;
+        PlayerFlags.Value.JumpUse = false;
+        PlayerFlags.Value.Jumping = false;
     }
     public void Hit(float damage)
     {
@@ -544,13 +549,13 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerHp -= damage;
 
-                DamageTextController.SetDamage(-damage, transform.position + (Vector3.up * 0.5f), 2);
+                DamageTextController.SetDamage(-damage, transform.position + (Vector3.up * 0.5f), DamageType.PlayerHealing);
             }
-            else if (shield) // 방어 가능한 상태일 때
+            else if (PlayerFlags.Value.Shield) // 방어 가능한 상태일 때
             {
                 DamageTextController.Shield(transform.position + Vector3.up * 0.5f);
             }
-            else if (!invincibility)
+            else if (!PlayerFlags.Value.Invincibility)
             {
                 if (Random.Range(0, 101) < Inventory.CurrentData.playerAvoidChance)
                 {
@@ -558,22 +563,22 @@ public class PlayerController : MonoBehaviour
 
                     ar.SetTrigger("Hit");
 
-                    invincibility = true;
+                    PlayerFlags.Value.Invincibility = true;
                 }
-                else if (!invincibility && !rolling)
+                else if (!PlayerFlags.Value.Invincibility && !PlayerFlags.Value.Rolling)
                 {
-                    invincibility = true;
+                    PlayerFlags.Value.Invincibility = true;
 
                     damage *= Inventory.CurrentData.monsterDamage;
 
-                    if (Random.Range(0, 101) < Inventory.CurrentData.monsterCriticalChance)
-                        damage *= 2f;
+                    if (Random.Range(0, 101) < Inventory.CurrentData.monsterCriticalChance) damage *= 2f;
 
                     PlayerHp -= damage;
 
-                    DamageTextController.SetDamage(damage, transform.position + (Vector3.up * 0.5f), 1);
+                    DamageTextController.SetDamage(damage, transform.position + (Vector3.up * 0.5f), DamageType.MonsterToPlayerNormal);
 
                     if (PlayerHp <= 0) Die();
+
                     else ar.SetTrigger("Hit");
 
                     SoundManager.Play("PlayerHit", SoundType.Effect);
@@ -592,9 +597,9 @@ public class PlayerController : MonoBehaviour
     }
     void NotInvincibility()
     {
-        invincibility = false;
+        PlayerFlags.Value.Invincibility = false;
     }
-    bool UseStamina(float cost)
+    bool TryUseStamina(float cost)
     {
         if (PlayerSp > cost)
         {
@@ -604,23 +609,13 @@ public class PlayerController : MonoBehaviour
         }
         return false;
     }
+    //bool HasEnoughStamina(float cost)
+    //{
+    //    return PlayerSp >= cost;
+    //}
 }
 public enum Dir
 {
     Left = -1,
     Right = 1
-}
-public enum PlayerState
-{
-    Idle,
-    Run,
-    Roll,
-    Jump,
-    Fall,
-    Swing1 = 10,
-    Swing2,
-    Swing3,
-    JumpSwing1,
-    JumpSwing2,
-    JumpSwing3
 }

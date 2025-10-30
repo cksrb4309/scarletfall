@@ -17,7 +17,16 @@ public class TitleScript : MonoBehaviour
 
     public void GameSceneLoad()
     {
-        FadeInOut.FadeStart(LoadScene);
+        ScreenTransition.Play(
+            startTransition: "Leaf_FadeOut",
+            endTransition: "Leaf_FadeIn",
+            action: () =>
+            {
+                LoadScene();
+            },
+            fadeStart: 0f,
+            fadeEnd: 0f,
+            duration: 0.5f);
     }
     public void OpenControlPanel()
     {

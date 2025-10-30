@@ -22,8 +22,6 @@ public class JumpSwingCollider : MonoBehaviour
         {
             if (isAttack)
             {
-                Debug.Log("»Æ¿Œ 321");
-
                 pc.TouchGround();
 
                 skyfallBlade.Play();

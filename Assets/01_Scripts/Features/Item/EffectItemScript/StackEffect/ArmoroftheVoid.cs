@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class ArmoroftheVoid : StackEffect
 {
-    public PlayerController pc;
-
     public SpriteRenderer shield;
 
     Color color;
@@ -14,8 +12,7 @@ public class ArmoroftheVoid : StackEffect
         shield.gameObject.SetActive(true);
 
         color = shield.color;
-
-        pc.shield = true;
+        PlayerFlags.Value.Shield = true;
 
         StopAllCoroutines();
 
@@ -43,6 +40,6 @@ public class ArmoroftheVoid : StackEffect
 
         shield.gameObject.SetActive(false);
 
-        pc.shield = false;
+        PlayerFlags.Value.Shield = false;
     }
 }

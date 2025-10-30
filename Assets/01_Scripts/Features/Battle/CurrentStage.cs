@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,7 +27,7 @@ public class CurrentStage : MonoBehaviour
 
     private void Start()
     {
-        NextMove();
+        DOVirtual.DelayedCall(1f, NextMove);
 
         baseColor = allImage[0].color;
     }

@@ -15,6 +15,6 @@ MonoBehaviour:
   Name: RedLeaf_FadeOut
   FadeImageColor: {r: 0.5943396, g: 0.09251513, b: 0.09748181, a: 1}
   TransitionColor: {r: 1, g: 1, b: 1, a: 1}
-  Particle: {fileID: 7110112813498328486, guid: 59197d69ae0705f4dad34d438e11511e, type: 3}
+  Particle: {fileID: 7110112813498328486, guid: 5d026c633e3d01e4d93869a70b3e489f, type: 3}
   Material: {fileID: 2100000, guid: 64347b25029d07e4ab715c49504176e2, type: 2}
   Length: 2

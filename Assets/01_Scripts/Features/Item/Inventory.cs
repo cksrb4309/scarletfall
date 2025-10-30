@@ -92,7 +92,7 @@ public class Inventory : MonoBehaviour
             }
             else
             {
-                Debug.Log("아이템 존재");
+
             }
         }
     }

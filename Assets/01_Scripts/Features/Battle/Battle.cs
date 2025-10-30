@@ -47,13 +47,12 @@ public class Battle : MonoBehaviour
     public void StartBattle()
     {
         if (currentLevelIndex + 1 != levels.Length) 
-        {
             StartCoroutine(LevelLoadingCoroutine());
-        }
     }
     IEnumerator LevelLoadingCoroutine()
     {
         isSpawn = true;
+
         yield return new WaitForSeconds(battleStartDelay);
 
         currentLevel = levels[++currentLevelIndex];

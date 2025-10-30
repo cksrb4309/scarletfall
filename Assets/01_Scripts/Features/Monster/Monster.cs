@@ -65,14 +65,14 @@ public class Monster : MonoBehaviour
         {
             damage *= Inventory.CurrentData.playerDamage;
 
-            int damageType = 0;
+            DamageType damageType = DamageType.PlayerToMonsterNormal;
 
             if (Random.Range(0, 101) <= Inventory.CurrentData.playerCriticalChance)
             {
                 //여기부터 계속
                 damage *= 2f;
 
-                damageType = 1;
+                damageType = DamageType.PlayerToMonsterCritical;
             }
 
             if (PlayerController.isMaximizer)
@@ -85,7 +85,7 @@ public class Monster : MonoBehaviour
 
                 damage *= 5f;
 
-                damageType = 2;
+                damageType = DamageType.PlayerToMonsterMaxDamage;
             }
 
             if (Random.Range(0, 101) < Inventory.CurrentData.monsterAvoidChance)
@@ -97,19 +97,8 @@ public class Monster : MonoBehaviour
             {
                 Hp -= damage;
 
-                if (damageType == 0)
-                {
-                    DamageTextController.SetDamage(damage, GetCenterPosition());
-                }
-                else if (damageType == 1)
-                {
-                    DamageTextController.SetDamage(damage, GetCenterPosition(), 3);
-                }
-                else if (damageType == 2)
-                {
-                    DamageTextController.SetDamage(damage, GetCenterPosition(), 4);
-                }
-
+                DamageTextController.SetDamage(damage, GetCenterPosition(), damageType);
+                
                 GameManager.Instance.lastHitMonster = this;
 
                 if (isMainAttack)
