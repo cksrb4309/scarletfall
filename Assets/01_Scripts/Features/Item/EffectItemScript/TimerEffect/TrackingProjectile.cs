@@ -20,7 +20,6 @@ public class TrackingProjectile : MonoBehaviour
     {
         if (target == null)
         {
-            Debug.Log("target Null");
             if (MonsterPos.Count > 0) 
             {
                 target = MonsterPos[Random.Range(0, MonsterPos.Count)];

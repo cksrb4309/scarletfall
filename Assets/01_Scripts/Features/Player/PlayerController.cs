@@ -46,7 +46,6 @@ public class PlayerController : MonoBehaviour
     float playerHp = 10;
     float playerSp = 10;
     float beforeHpMaxRatio = 1f;
-
     float PlayerSp {
         get { return playerSp; }
         set {
@@ -54,7 +53,9 @@ public class PlayerController : MonoBehaviour
             spFillImage.fillAmount =
                 playerSp < 0 ?
                 0 : playerSp / PlayerStat.Value.PlayerMaxSp;
-            spText.text = playerSp.ToString("F0") + " / " + PlayerStat.Value.PlayerMaxSp.ToString();
+            //spText.text = Mathf.FloorToInt(playerSp).ToString() + " / " + Mathf.FloorToInt(PlayerStat.Value.PlayerMaxSp).ToString();
+            spText.SetText(PlayerPointFormat, Mathf.FloorToInt(playerSp), Mathf.FloorToInt(PlayerStat.Value.PlayerMaxSp));
+
         }
     }
     private float PlayerHp
@@ -67,11 +68,13 @@ public class PlayerController : MonoBehaviour
             hpFillImage.fillAmount =
                 playerHp < 0 ?
                 0 : playerHp / playerMaxHp;
-            hpText.text = playerHp.ToString("F0") + " / " + playerMaxHp.ToString();
+            //hpText.text = playerHp.ToString("F0") + " / " + playerMaxHp.ToString();
+            hpText.SetText(PlayerPointFormat, Mathf.FloorToInt(playerHp), Mathf.FloorToInt(playerMaxHp));
         }
     }
     public bool IsAlive { get { return playerHp > 0; } }
 
+    private static readonly string PlayerPointFormat = "{0} / {1}";
     public PlayerState Ps
     {
         get => ps;
@@ -166,6 +169,8 @@ public class PlayerController : MonoBehaviour
         InputManager.Release(InputType.Jump);
         InputManager.Release(InputType.Attack);
         InputManager.Release(InputType.Roll);
+
+        PlayerFlags.Value.ResetFlags();
     }
     public void Update()
     {
@@ -343,6 +348,7 @@ public class PlayerController : MonoBehaviour
         SoundManager.Play("PlayerAttack3", SoundType.Effect);
     }
     #endregion
+    const string LandSoundName = "PlayerLand";
     private void FixedUpdate()
     {
         if (IsAlive == false)
@@ -362,7 +368,7 @@ public class PlayerController : MonoBehaviour
         {
             if (bottomCollider.IsTouching(filter))
             {
-                SoundManager.Play("PlayerLand", SoundType.Effect);
+                SoundManager.Play(LandSoundName, SoundType.Effect);
 
                 if (SetPlayerState(PlayerState.Idle))
                 {
@@ -371,10 +377,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        //if (Ps == PlayerState.Idle || Ps == PlayerState.Run)
-        //{
-
-        //}
 
 
         if (PlayerFlags.Value.JumpUse == true && PlayerFlags.Value.Jumping == false)

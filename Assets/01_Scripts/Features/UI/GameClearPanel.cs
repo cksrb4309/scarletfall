@@ -11,6 +11,8 @@ public class GameClearPanel : MonoBehaviour
     public Color[] colors;
     private void OnEnable()
     {
+        battleLoader.DisableStageText();
+
         if (difficultyText == null) return;
 
         switch (Option.difficulty)
@@ -28,7 +30,6 @@ public class GameClearPanel : MonoBehaviour
                 difficultyText.color = colors[2];
                 break;
         }
-        battleLoader.DisableStageText();
     }
     public void ShowItem()
     {
@@ -38,19 +39,14 @@ public class GameClearPanel : MonoBehaviour
     {
         Time.timeScale = 1;
 
-        ScreenTransition.Play(
-            startTransition: "Leaf_FadeOut",
-            endTransition: "Leaf_FadeIn",
-            action: () =>
-            {
-                TryLoad();
-            },
-            fadeStart: 0f,
-            fadeEnd: 0f,
-            duration: 2f);
-    }
-    void TryLoad()
-    {
-        SceneManager.LoadScene("Title");
+        ScreenTransition.Play(new ScreenTransitionOptions
+        {
+            StartTransitionName = "Leaf_FadeOut",
+            EndTransitionName = "Leaf_FadeIn",
+            SceneName = "Title",
+            FadeStart = 0f,
+            FadeEnd = 0f,
+            FadeDuration = 2f
+        });
     }
 }

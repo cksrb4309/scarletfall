@@ -18,6 +18,9 @@ public class ScreenTransition : MonoBehaviour
 
     private Dictionary<string, UIParticle> particleDict = new();
 
+    private ScreenTransitionData startTransitionData = null;
+    private ScreenTransitionData endTransitionData = null;
+
     private void Awake()
     {
         if (instance == null)
@@ -32,221 +35,82 @@ public class ScreenTransition : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 시작 전환이 끝난 경우 함수를 실행하고, 마무리 전환을 진행한다
-    /// </summary>
-    /// <param name="startTransition">시작 화면전환 명칭</param>
-    /// <param name="endTransition">종료 화면전환 명칭</param>
-    /// <param name="action">시작 화면전환이 종료된 후 실행될 액션</param>
-    /// <param name="fadeStart">이미지의 Alpha 적용 지연 시간</param>
-    /// <param name="fadeEnd">이미지의 Alpha 적용 지연 시간</param>
-    public static void Play(string startTransition, string endTransition, Action action, float fadeStart = 0, float fadeEnd = 1)
+    public static Image GetFadeImage()
     {
-        instance.Excute(startTransition, endTransition, action, fadeStart, fadeEnd);
+        return instance.fadeImage;
     }
-
-    /// <summary>
-    /// 시작 전환이 끝난 경우 씬을 이동하고, 마무리 전환을 진행한다
-    /// </summary>
-    /// <param name="startTransition">시작 화면전환 명칭</param>
-    /// <param name="endTransition">종료 화면전환 명칭</param>
-    /// <param name="sceneName">이동할 씬 명칭</param>
-    /// <param name="fadeStart">이미지의 Alpha 적용 지연 시간</param>
-    /// <param name="fadeEnd">이미지의 Alpha 적용 지연 시간</param>
-    public static void Play(string startTransition, string endTransition, string sceneName, float fadeStart = 0, float fadeEnd = 1)
+    public static void Play(ScreenTransitionOptions options)
     {
-        instance.Excute(startTransition, endTransition, sceneName, fadeStart, fadeEnd);
+        instance.ExecuteTransition(options);
     }
-
-    /// <summary>
-    /// 시작 전환이 끝난 경우 함수를 실행하고, duration 동안 지연한 후에 마무리 전환을 진행한다
-    /// </summary>
-    /// <param name="startTransition">시작 화면전환 명칭</param>
-    /// <param name="endTransition">종료 화면전환 명칭</param>
-    /// <param name="action">시작 화면전환이 종료된 후 실행될 액션</param>
-    /// <param name="fadeStart">이미지의 Alpha 적용 지연 시간</param>
-    /// <param name="fadeEnd">이미지의 Alpha 적용 지연 시간</param>
-    /// <param name="duration"></param>
-    public static void Play(string startTransition, string endTransition, Action action, float fadeStart = 0, float fadeEnd = 1, float duration = 1)
+    private void ExecuteTransition(ScreenTransitionOptions options)
     {
-        instance.Excute(startTransition, endTransition, action, fadeStart, fadeEnd, duration);
+        SetTransitionData(options);
+
+        StartCoroutine(RunTransitionRoutine(options));
     }
-    public void Excute(string startTransition, string endTransition, string sceneName, float fadeStart, float fadeEnd)
+    IEnumerator RunTransitionRoutine(ScreenTransitionOptions options)
     {
-        ScreenTransitionData st, ed;
+        // 1) 화면전환 시작 효과
+        ParticlePlay(startTransitionData);
 
-        GetTransition(ref startTransition, out st);
-        GetTransition(ref endTransition, out ed);
+        // 2) 페이드 인 시작 전 딜레이
+        if (options.FadeStart > 0f) yield return new WaitForSeconds(options.FadeStart);
 
-        fadeImage.color = st.FadeImageColor;
+        // 3) 페이드 인
+        float fadeInDuration = startTransitionData.Length - options.FadeStart;
+        Color baseColor = startTransitionData.FadeImageColor;
+        baseColor.a = 0f;
+        fadeImage.color = baseColor;
 
-        StartCoroutine(FadeCoroutine(fadeStart, fadeEnd, st.Length, ed.Length, sceneName, st, ed));
-    }
-    public void Excute(string startTransition, string endTransition, Action action, float fadeStart, float fadeEnd)
-    {
-        ScreenTransitionData st, ed;
+        yield return FadeAlpha(0f, 1f, fadeInDuration);
 
-        GetTransition(ref startTransition, out st);
-        GetTransition(ref endTransition, out ed);
-
-        fadeImage.color = st.FadeImageColor;
-
-        StartCoroutine(TransitionCoroutine(st, ed));
-        StartCoroutine(FadeCoroutine(fadeStart, fadeEnd, st.Length, ed.Length, action));
-    }
-    public void Excute(string startTransition, string endTransition, Action action, float fadeStart, float fadeEnd, float duration)
-    {
-        ScreenTransitionData st, ed;
-
-        GetTransition(ref startTransition, out st);
-        GetTransition(ref endTransition, out ed);
-
-        fadeImage.color = st.FadeImageColor;
-
-        StartCoroutine(TransitionCoroutine(st, ed, duration));
-        StartCoroutine(FadeCoroutine(fadeStart, fadeEnd, st.Length, ed.Length, action, duration));
-    }
-    IEnumerator TransitionCoroutine(ScreenTransitionData startTransition, ScreenTransitionData endTransition)
-    {
-        ParticlePlay(startTransition);
-
-        yield return new WaitForSeconds(startTransition.Length);
-
-        ParticlePlay(endTransition);
-    }
-    IEnumerator TransitionCoroutine(ScreenTransitionData startTransition, ScreenTransitionData endTransition, float duration)
-    {
-        ParticlePlay(startTransition);
-
-        yield return new WaitForSeconds(duration + startTransition.Length);
-
-        ParticlePlay(endTransition);
-    }
-    IEnumerator FadeCoroutine(float fadeStart, float fadeEnd, float startTransitionLength, float endTransitionLength, Action action)
-    {
-        float t = 0;
-        float max = startTransitionLength;
-
-        Color startColor = fadeImage.color;
-        Color endColor = fadeImage.color;
-
-        startColor.a = 0f;
-        endColor.a = 1f;
-
-        while (t < max)
+        // 4) 완료 콜백 또는 씬 로드
+        if (options.OnTransitionComplete != null)
         {
-            t += Time.deltaTime;
+            options.OnTransitionComplete.Invoke();
+        }
+        if (!string.IsNullOrEmpty(options.SceneName))
+        {
+            yield return WaitForSceneLoad(options.SceneName);
+        }
 
-            fadeImage.color = Color.Lerp(startColor, endColor, Mathf.InverseLerp(fadeStart, max, t));
+        // 5) Fade 유지 시간
+        if (options.FadeDuration > 0f) yield return new WaitForSeconds(options.FadeDuration);
+
+        // 6) 화면전환 종료 효과
+        ParticlePlay(endTransitionData);
+
+        // 7) 페이드 아웃 시작 전 딜레이
+        if (options.FadeEnd > 0f) yield return new WaitForSeconds(options.FadeEnd);
+
+        // 8) 페이드 아웃
+        {
+            float fadeOutDuration = endTransitionData.Length - options.FadeEnd;
+            yield return FadeAlpha(1f, 0f, fadeOutDuration);
+        }
+    }
+    IEnumerator FadeAlpha(float from, float to, float duration)
+    {
+        Color color = fadeImage.color;
+        color.a = from;
+        fadeImage.color = color;
+
+        float t = 0f;
+
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float normalized = Mathf.Clamp01(t / duration);
+
+            color.a = Mathf.Lerp(from, to, normalized);
+            fadeImage.color = color;
 
             yield return null;
         }
 
-        action.Invoke(); // 함수 실행
-
-        t = 1f;
-
-        max = endTransitionLength;
-
-        while (t > 0)
-        {
-            t -= Time.deltaTime;
-
-            fadeImage.color = Color.Lerp(startColor, endColor, Mathf.InverseLerp(fadeEnd, max, t));
-
-            yield return null;
-        }
-    }
-    IEnumerator FadeCoroutine(float fadeStart, float fadeEnd, float startTransitionLength, float endTransitionLength, Action action, float duration)
-    {
-        Color fadeColor = fadeImage.color;
-
-        if (fadeStart > 0f) yield return new WaitForSeconds(fadeStart);
-
-        float startFadeDuration = startTransitionLength - fadeStart;
-        if (startFadeDuration <= 0f)
-        {
-            fadeColor.a = 1f;
-            fadeImage.color = fadeColor;
-        }
-        else
-        {
-            float elapsed = 0f;
-            while (elapsed < startFadeDuration)
-            {
-                elapsed += Time.deltaTime;
-                float progress = Mathf.Clamp01(elapsed / startFadeDuration);
-                fadeColor.a = Mathf.Lerp(0f, 1f, progress);
-                fadeImage.color = fadeColor;
-                yield return null;
-            }
-        }
-
-        action?.Invoke();
-
-        if (duration > 0f) yield return new WaitForSeconds(duration);
-
-        if (fadeEnd > 0f) yield return new WaitForSeconds(fadeEnd);
-
-        float endFadeDuration = endTransitionLength - fadeEnd;
-        if (endFadeDuration <= 0f)
-        {
-            fadeColor.a = 0f;
-            fadeImage.color = fadeColor;
-        }
-        else
-        {
-            float elapsed = 0f;
-            while (elapsed < endFadeDuration)
-            {
-                elapsed += Time.deltaTime;
-                float progress = Mathf.Clamp01(elapsed / endFadeDuration);
-                fadeColor.a = Mathf.Lerp(1f, 0f, progress);
-                fadeImage.color = fadeColor;
-                yield return null;
-            }
-        }
-    }
-    IEnumerator FadeCoroutine(float fadeStart, float fadeEnd, float startTransitionLength, float endTransitionLength, string sceneName, ScreenTransitionData st, ScreenTransitionData ed)
-    {
-        float t = 0;
-        float max = startTransitionLength;
-
-        Color startColor = fadeImage.color;
-        Color endColor = fadeImage.color;
-
-        startColor.a = 0f;
-        endColor.a = 1f;
-
-        ParticlePlay(st);
-
-        while (t < max)
-        {
-            t += Time.deltaTime;
-
-            fadeImage.color = Color.Lerp(startColor, endColor, Mathf.InverseLerp(fadeStart, max, t));
-
-            yield return null;
-        }
-
-        yield return WaitForSceneLoad(sceneName);
-
-        ParticlePlay(ed);
-
-        max = endTransitionLength;
-
-        t = max;
-
-        yield return null;
-
-        while (t > 0)
-        {
-            t -= Time.deltaTime;
-
-            fadeImage.color = Color.Lerp(startColor, endColor, Mathf.InverseLerp(fadeEnd, max, t));
-
-            yield return null;
-        }
+        color.a = to;
+        fadeImage.color = color;
     }
     private IEnumerator WaitForSceneLoad(string sceneName)
     {
@@ -258,25 +122,43 @@ public class ScreenTransition : MonoBehaviour
         {
             yield return null;
         }
-
-        Debug.Log("Scene Loaded!");
     }
-    private void GetTransition(ref string transitionName, out ScreenTransitionData data)
+    private void SetTransitionData(ScreenTransitionOptions options)
     {
-        data = null;
-
+        if (options.StartTransitionData != null && options.EndTransitionData != null)
+        {
+            SetTransitionData(options.StartTransitionData, options.EndTransitionData);
+        }
+        else
+        {
+            SetTransitionData(options.StartTransitionName, options.EndTransitionName);
+        }
+    }
+    private void SetTransitionData(string st, string ed)
+    {
         foreach (ScreenTransitionData transition in TransitionsData)
         {
-            if (transition.Name.Equals(transitionName))
+            if (transition.Name.Equals(st))
             {
-                data = transition;
+                startTransitionData = transition;
 
                 transition.Material.SetColor("_Color", transition.TransitionColor);
+            }
+            if (transition.Name.Equals(ed))
+            {
+                endTransitionData = transition;
 
-                return;
+                transition.Material.SetColor("_Color", transition.TransitionColor);
             }
         }
-        Debug.LogError("요청한 Transition을 찾지 못함 : " + transitionName);
+    }
+    private void SetTransitionData(ScreenTransitionData st, ScreenTransitionData ed)
+    {
+        startTransitionData = st;
+        endTransitionData = ed;
+
+        st.Material.SetColor("_Color", st.TransitionColor);
+        ed.Material.SetColor("_Color", ed.TransitionColor);
     }
     private void ParticlePlay(ScreenTransitionData screenTransitionData)
     {
@@ -288,11 +170,20 @@ public class ScreenTransition : MonoBehaviour
 
             particleDict[screenTransitionData.Name].transform.SetAsFirstSibling();
         }
-
         particleDict[screenTransitionData.Name].Play();
     }
-    public static Image GetFadeImage()
-    {
-        return instance.fadeImage;
-    }
+}
+
+public class ScreenTransitionOptions
+{
+    public float FadeStart = 0f;
+    public float FadeEnd = 1f;
+    public float FadeDuration = 0.5f;
+    public string SceneName = null;
+    public string StartTransitionName = null;
+    public string EndTransitionName = null;
+    public Action OnTransitionComplete = null;
+    public ScreenTransitionData StartTransitionData = null;
+    public ScreenTransitionData EndTransitionData = null;
+    public ScreenTransitionOptions() { }
 }

@@ -94,6 +94,8 @@ public class FlyingEye : Monster
         Vector3 startPos = transform.position;
         Vector3 endPos = transform.position + (playerTransform.position - startPos).normalized * 10f;
 
+        endPos.z = startPos.z;
+
         double t = 0;
 
         while (t < 1f)

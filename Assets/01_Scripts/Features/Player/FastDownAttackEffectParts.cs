@@ -17,10 +17,11 @@ public class FastDownAttackEffectParts : MonoBehaviour
 
     float scale;
     float speed;
-    float delay;
+
+    WaitForSeconds randomDelay = null;
     private void OnEnable()
     {
-        delay = Random.Range(minDelay, maxDelay);
+        randomDelay = new WaitForSeconds(Random.Range(minDelay, maxDelay));
         speed = Random.Range(minSpeed, maxSpeed);
         scale = Random.Range(minScale, maxScale);
 
@@ -38,7 +39,7 @@ public class FastDownAttackEffectParts : MonoBehaviour
         {
             sr.sprite = sprites[i];
 
-            yield return new WaitForSeconds(delay);
+            yield return randomDelay;
         }
         Return();
     }

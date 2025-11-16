@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -22,7 +22,7 @@ public class RedHood : Monster
         get { return PlayerController.instance.transform; }
     }
 
-    Dir dir // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡º¸´Ù ¿À¸¥Æí¿¡ ÀÖ¾î¼­ ¿ŞÂÊÀ» ¹Ù¶óº¼ ¶§´Â Left, ¿À¸¥ÂÊÀ» ÃÄ´Ùº¸¸é Right
+    Dir dir // í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ë³´ë‹¤ ì˜¤ë¥¸í¸ì— ìˆì–´ì„œ ì™¼ìª½ì„ ë°”ë¼ë³¼ ë•ŒëŠ” Left, ì˜¤ë¥¸ìª½ì„ ì³ë‹¤ë³´ë©´ Right
     {
         get
         {
@@ -31,18 +31,18 @@ public class RedHood : Monster
         }
     }
 
-    int phase = 0; // ÇöÀç º¸½º¸÷ ´Ü°è Phase
-    int pattern = 0; // ·£´ıÀ¸·Î ¼±ÅÃÇÑ ÆĞÅÏ
-    int current = -1; // ÇöÀç ÆĞÅÏ ¾×¼Ç Index
+    int phase = 0; // í˜„ì¬ ë³´ìŠ¤ëª¹ ë‹¨ê³„ Phase
+    int pattern = 0; // ëœë¤ìœ¼ë¡œ ì„ íƒí•œ íŒ¨í„´
+    int current = -1; // í˜„ì¬ íŒ¨í„´ ì•¡ì…˜ Index
 
-    Vector3 beforePos = new Vector3(0, 3.255901f, 0); // ÀÌÀü À§Ä¡ ÀúÀå
-    Vector3 currentPosition = Vector3.zero; // ÇöÀç À§Ä¡
+    Vector3 beforePos = new Vector3(0, 3.255901f, 0); // ì´ì „ ìœ„ì¹˜ ì €ì¥
+    Vector3 currentPosition = Vector3.zero; // í˜„ì¬ ìœ„ì¹˜
 
-    Action[][][] patternActions; // ÆĞÅÏº° Çàµ¿À» ¼øÂ÷ÀûÀ¸·Î ´ãÀº Action °¡º¯ ¹è¿­
+    Action[][][] patternActions; // íŒ¨í„´ë³„ í–‰ë™ì„ ìˆœì°¨ì ìœ¼ë¡œ ë‹´ì€ Action ê°€ë³€ ë°°ì—´
 
     private void Awake()
     {
-        #region patternActions ÆäÀÌÁî, ÆĞÅÏ Å©±â¿¡ ¸Â°Ô ÃÊ±âÈ­
+        #region patternActions í˜ì´ì¦ˆ, íŒ¨í„´ í¬ê¸°ì— ë§ê²Œ ì´ˆê¸°í™”
 
         patternActions = new Action[3][][];
 
@@ -64,7 +64,7 @@ public class RedHood : Monster
 
         #endregion
 
-        #region º¸½º¸÷ÀÇ ÆĞÅÏ ¼³Á¤
+        #region ë³´ìŠ¤ëª¹ì˜ íŒ¨í„´ ì„¤ì •
 
         #region 1 Phase Pattern Set
         patternActions[0][0][0] = FastKnifeAttack;
@@ -143,21 +143,17 @@ public class RedHood : Monster
 
         SoundManager.Play("RedHoodLaugh", SoundType.Effect);
     }
-    #region »ïÁß ÃßÀû È­»ì                                [ TripleTrackingArrow ]
+    #region ì‚¼ì¤‘ ì¶”ì  í™”ì‚´                                [ TripleTrackingArrow ]
 
-    int trackingArrowFirePosIndex = 0; // trackingArrowFirePos[]ÀÇ ÁÖ¼Ò·Î »ç¿ëÇÏ´Â Index °ª
+    int trackingArrowFirePosIndex = 0; // trackingArrowFirePos[]ì˜ ì£¼ì†Œë¡œ ì‚¬ìš©í•˜ëŠ” Index ê°’
     void TripleTrackingArrow()
     {
-        Debug.Log("»ïÁß ÃßÀû È­»ì ½ÃÀÛ");
-
         ar.SetTrigger("TripleArrowShoot");
 
         trackingArrowFirePosIndex = 0;
     }
     void TrackingArrowShoot()
     {
-        Debug.Log("»ïÁß ÃßÀû È­»ì ¹ß»ç");
-
         TrackingArrow arrow = PoolingManager.Instance.GetObject<TrackingArrow>("TrackingArrow");
 
         arrow.StartMove(trackingArrowFirePos[trackingArrowFirePosIndex++].position);
@@ -165,25 +161,22 @@ public class RedHood : Monster
         SoundManager.Play("RedHoodTrackingCharge", SoundType.Effect);
     }
     #endregion
-    #region È°À» ½ÃÀ§¿¡ °Ü´©°í ÀÌµ¿ ÈÄ Á¤¸é ¹æÇâ¿¡ ½ğ´Ù   [ ChargeArrow ]
+    #region í™œì„ ì‹œìœ„ì— ê²¨ëˆ„ê³  ì´ë™ í›„ ì •ë©´ ë°©í–¥ì— ìœë‹¤   [ ChargeArrow ]
     void ChargeArrow()
     {
-        Debug.Log("ÃæÀü ½ÃÀÛ");
         ar.SetTrigger("ChargeArrow");
     }
     void ChargeArrowEffect()
     {
-        Debug.Log("ÃæÀü ÀÌÆåÆ®");
-        particles[3].Play(); // È°·Î ÃæÀüÇÏ´Â ÀÌÆåÆ® ÁÜ
+        particles[3].Play(); // í™œë¡œ ì¶©ì „í•˜ëŠ” ì´í™íŠ¸ ì¤Œ
 
         SoundManager.Play("ChargeArrow", SoundType.Effect);
     }
-    void CheckDash() // ÀÌµ¿ÇØ¾ßÇÒ ÇÊ¿ä°¡ ÀÖÀ» ¶§ ÀÌµ¿ÇÑ ÈÄ È­»ìÀ» ½ğ´Ù
+    void CheckDash() // ì´ë™í•´ì•¼í•  í•„ìš”ê°€ ìˆì„ ë•Œ ì´ë™í•œ í›„ í™”ì‚´ì„ ìœë‹¤
     {
-        Debug.Log("ÀÌµ¿È®ÀÎ");
         if (Mathf.Abs(Player.position.x - currentPosition.x) < 3)
         {
-            particles[0].Play(); // ¿¬¸· Àç»ı
+            particles[0].Play(); // ì—°ë§‰ ì¬ìƒ
 
             while (Mathf.Abs(Player.position.x - currentPosition.x) < 5f || currentPosition.x > 10f || currentPosition.x < -11f)
             {
@@ -191,16 +184,14 @@ public class RedHood : Monster
             }
             transform.position = currentPosition;
 
-            particles[0].Play(); // ¿¬¸· Àç»ı
+            particles[0].Play(); // ì—°ë§‰ ì¬ìƒ
         }
-        LookAt(); // ÇÃ·¹ÀÌ¾î ÃÄ´Ùº¸±â
+        LookAt(); // í”Œë ˆì´ì–´ ì³ë‹¤ë³´ê¸°
 
-        ChargeArrowShoot(); // È­»ì ¹ß»ç
+        ChargeArrowShoot(); // í™”ì‚´ ë°œì‚¬
     }
     void ChargeArrowShoot()
     {
-        Debug.Log("È­»ì ¹ß»ç");
-
         SoundManager.Play("ShootArrow", SoundType.Effect);
 
         Vector3 front = (dir == Dir.Left ? Vector3.left : Vector3.right);
@@ -217,13 +208,12 @@ public class RedHood : Monster
         ar.SetTrigger("ShootArrow");
     }
     #endregion
-    #region ÁıÁßÇÑ ÀÌÈÄ¿¡ Á¤¸é¹æÇâÀ¸·Î µµ³¢¸¦ Å©°Ô ÈÖµÎ¸§ [ ChargeAxeAttack ]
+    #region ì§‘ì¤‘í•œ ì´í›„ì— ì •ë©´ë°©í–¥ìœ¼ë¡œ ë„ë¼ë¥¼ í¬ê²Œ íœ˜ë‘ë¦„ [ ChargeAxeAttack ]
     void ChargeAxeAttack()
     {
-        Debug.Log("µµ³¢ ÃæÀü °ø°İ");
-        ar.SetTrigger("AxeGreatAttackWaiting"); // ÁØºñ¸ğ¼Ç
+        ar.SetTrigger("AxeGreatAttackWaiting"); // ì¤€ë¹„ëª¨ì…˜
 
-        particles[2].Play(); // ÃæÃµ ÀÌÆåÆ®? Ç¥½Ã
+        particles[2].Play(); // ì¶©ì²œ ì´í™íŠ¸? í‘œì‹œ
 
         LookAt();
     }
@@ -231,15 +221,9 @@ public class RedHood : Monster
     {
         LookAt();
 
-        Debug.Log("ÈÖµÎ¸£±â Àü X:" + currentPosition.x.ToString());
-
         currentPosition.x += (dir == Dir.Left ? -8.74f : 8.74f);
 
-        Debug.Log("ÈÖµÎ¸£±â ÈÄ X:" + currentPosition.x.ToString());
-
         transform.position = currentPosition;
-
-        Debug.Log("À§Ä¡ È®ÀÎ X:" + transform.position.x.ToString());
 
         SoundManager.Play("RedHoodGreatAxeSwing", SoundType.Effect);
 
@@ -256,20 +240,20 @@ public class RedHood : Monster
         NextActionSetting(-1);
     }
     #endregion
-    #region Àº½Å ÈÄ ÀÌµ¿ ÈÄ ÇÃ·¹ÀÌ¾î¿¡°Ô ´Ü°ËÀ» ´øÁü      [ StealthBackMoveThrowKnife ]
+    #region ì€ì‹  í›„ ì´ë™ í›„ í”Œë ˆì´ì–´ì—ê²Œ ë‹¨ê²€ì„ ë˜ì§      [ StealthBackMoveThrowKnife ]
     void StealthBackMoveThrowKnife()
     {
         StartCoroutine(StealthBackMoveThrowKnifeCoroutine());
     }
     IEnumerator StealthBackMoveThrowKnifeCoroutine()
     {
-        particles[0].Play(); // ¿¬¸· ÀÌÆåÆ® Àç»ı
+        particles[0].Play(); // ì—°ë§‰ ì´í™íŠ¸ ì¬ìƒ
 
-        sr.enabled = false; // »¡°£ ¸ÁÅä ¼û±â±â
+        sr.enabled = false; // ë¹¨ê°„ ë§í†  ìˆ¨ê¸°ê¸°
 
-        cd.enabled = false; // Ãæµ¹ ºñÈ°¼ºÈ­
+        cd.enabled = false; // ì¶©ëŒ ë¹„í™œì„±í™”
 
-        hpBarParent.SetActive(false); // hp¹Ù ¼û±â±â
+        hpBarParent.SetActive(false); // hpë°” ìˆ¨ê¸°ê¸°
 
         currentPosition = currentPosition + (Vector3.right * (currentPosition.x > 0 ? -10 : 10));
 
@@ -295,49 +279,47 @@ public class RedHood : Monster
         }
         transform.position = currentPosition;
 
-        sr.enabled = true; // »¡°£ ¸ÁÅä Ç¥½Ã
+        sr.enabled = true; // ë¹¨ê°„ ë§í†  í‘œì‹œ
 
-        particles[0].Play(); // ¿¬¸· ÀÌÆåÆ® Àç»ı
+        particles[0].Play(); // ì—°ë§‰ ì´í™íŠ¸ ì¬ìƒ
 
-        cd.enabled = true; // Ãæµ¹ È°¼ºÈ­
+        cd.enabled = true; // ì¶©ëŒ í™œì„±í™”
 
-        hpBarParent.SetActive(true); // hp¹Ù Ç¥½Ã
+        hpBarParent.SetActive(true); // hpë°” í‘œì‹œ
 
-        LookAt(); // ÇÃ·¹ÀÌ¾î ÃÄ´Ùº¸°Ô ÇÏ±â
+        LookAt(); // í”Œë ˆì´ì–´ ì³ë‹¤ë³´ê²Œ í•˜ê¸°
 
-        ar.SetTrigger("ThrowKnife"); // °ø°İ ¸ğ¼Ç
+        ar.SetTrigger("ThrowKnife"); // ê³µê²© ëª¨ì…˜
     }
     void ThrowKnife()
     {
-        // ´Ü°Ë »ı¼º
+        // ë‹¨ê²€ ìƒì„±
         RedHoodKnife knife = PoolingManager.Instance.GetObject<RedHoodKnife>("RedHoodKnife");
 
-        // ´Ü°Ë À§Ä¡ Á¶Á¤
+        // ë‹¨ê²€ ìœ„ì¹˜ ì¡°ì •
         knife.transform.position = throwKnifeFirePos.position;
 
-        // ´Ü°Ë ¼Óµµ, ¹æÇâ Á¶Á¤
+        // ë‹¨ê²€ ì†ë„, ë°©í–¥ ì¡°ì •
         knife.StartMove(12f, ((Player.position + Vector3.up * 0.5f) - knife.transform.position).normalized);
 
         SoundManager.Play("RedHoodThrowKnife", SoundType.Effect);
     }
     #endregion
-    #region ÇÃ·¹ÀÌ¾î ÃÄ´Ùº» ÈÄ ÇØ´ç ¹æÇâÀ¸·Î ÀÌµ¿         [ MoveTowardPlayer ]
+    #region í”Œë ˆì´ì–´ ì³ë‹¤ë³¸ í›„ í•´ë‹¹ ë°©í–¥ìœ¼ë¡œ ì´ë™         [ MoveTowardPlayer ]
     void MoveTowardPlayer()
     {
-        LookAt(); // ÇÃ·¹ÀÌ¾î ÃÄ´Ùº¸±â
+        LookAt(); // í”Œë ˆì´ì–´ ì³ë‹¤ë³´ê¸°
 
-        // Â÷ÀÌ°¡ Á» ¹ú¾îÁ®ÀÖÀ» ¶§
+        // ì°¨ì´ê°€ ì¢€ ë²Œì–´ì ¸ìˆì„ ë•Œ
         if (Mathf.Abs(currentPosition.x - Player.position.x) > 2f)
-            particles[1].Play(); // ´ë½¬ ÀÌÆåÆ® Àç»ı
+            particles[1].Play(); // ëŒ€ì‰¬ ì´í™íŠ¸ ì¬ìƒ
 
-        ForwardMove(Mathf.Abs(transform.position.x - Player.position.x) + (dir == Dir.Left ? -1f : 1f)); // ÇÃ·¹ÀÌ¾î¿ÍÀÇ °Å¸® Â÷¸¦ °¡Á®¿Í¼­ ÀÌµ¿½ÃÅ´
+        ForwardMove(Mathf.Abs(transform.position.x - Player.position.x) + (dir == Dir.Left ? -1f : 1f)); // í”Œë ˆì´ì–´ì™€ì˜ ê±°ë¦¬ ì°¨ë¥¼ ê°€ì ¸ì™€ì„œ ì´ë™ì‹œí‚´
     }
     #endregion
-    #region ÀÌµ¿ ÈÄ µµ³¢ °ø°İ                             [ AxeAttack ]
+    #region ì´ë™ í›„ ë„ë¼ ê³µê²©                             [ AxeAttack ]
     void AxeAttack()
     {
-        Debug.Log("µµ³¢ °ø°İ");
-
         StartCoroutine(AxeAttackCoroutine());
     }
     IEnumerator AxeAttackCoroutine()
@@ -347,57 +329,51 @@ public class RedHood : Monster
         ar.SetTrigger("AxeAttack");
     }
     #endregion
-    #region ÀÌµ¿ ÈÄ °ø°İ                                  [ KnifeAttack ]
+    #region ì´ë™ í›„ ê³µê²©                                  [ KnifeAttack ]
     void KnifeAttack()
     {
-        Debug.Log("Æò¹ü ÀÌµ¿ °ø°İ");
-        // ÇÃ·¹ÀÌ¾î¿¡°Ô Æò¹üÈ÷ ÀÌµ¿ÇÏ¿© ´Ü°Ë 3Å¸ °ø°İ
+        // í”Œë ˆì´ì–´ì—ê²Œ í‰ë²”íˆ ì´ë™í•˜ì—¬ ë‹¨ê²€ 3íƒ€ ê³µê²©
         StartCoroutine(KnifeAttackCoroutine());
     }
     IEnumerator KnifeAttackCoroutine()
     {
-        Debug.Log("KnifeAttackCoroutine");
-
-        // ÇÃ·¹ÀÌ¾î¿ÍÀÇ °¡·Î °Å¸® È®ÀÎÇÒ float
+        // í”Œë ˆì´ì–´ì™€ì˜ ê°€ë¡œ ê±°ë¦¬ í™•ì¸í•  float
         float distance = Mathf.Abs(transform.position.x - Player.position.x);
 
-        LookAt(); // ÇÃ·¹ÀÌ¾î ÃÄ´Ùº¸±â
+        LookAt(); // í”Œë ˆì´ì–´ ì³ë‹¤ë³´ê¸°
 
-        // ¶Ù´Â ¾Ö´Ï¸ŞÀÌ¼ÇÀ¸·Î ÀüÈ¯
+        // ë›°ëŠ” ì• ë‹ˆë©”ì´ì…˜ìœ¼ë¡œ ì „í™˜
         if (distance > 1.2f) ar.SetTrigger("Run");
 
-        while (distance > 1.2f) // °¡±î¿ö Áú¶§±îÁö ½ÇÇà
+        while (distance > 1.2f) // ê°€ê¹Œì›Œ ì§ˆë•Œê¹Œì§€ ì‹¤í–‰
         {
-            // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¿¡ µû¶ó xÃà ÀÌµ¿À» ÇÑ´Ù
+            // í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ì— ë”°ë¼ xì¶• ì´ë™ì„ í•œë‹¤
             currentPosition.x += (dir == Dir.Right ? 1 : -1) * 5f * Time.deltaTime;
 
-            // À§Ä¡¸¦ Àû¿ëÇÑ´Ù
+            // ìœ„ì¹˜ë¥¼ ì ìš©í•œë‹¤
             transform.position = currentPosition;
 
-            // Â÷ÀÌ °ªÀ» ±¸ÇÑ´Ù
+            // ì°¨ì´ ê°’ì„ êµ¬í•œë‹¤
             distance = Mathf.Abs(transform.position.x - Player.position.x);
 
             yield return null;
         }
 
-        // °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         ar.SetTrigger("KnifeAttack");
     }
     #endregion
-    #region ºü¸¥ ÀÌµ¿ ÈÄ °ø°İ                             [ FastKnifeAttack ]
+    #region ë¹ ë¥¸ ì´ë™ í›„ ê³µê²©                             [ FastKnifeAttack ]
     void FastKnifeAttack()
     {
-        Debug.Log("ºü¸¥ ÀÌµ¿ °ø°İ");
-        // ÇÃ·¹ÀÌ¾î¿¡°Ô ºü¸¥ ¼Óµµ·Î ÀÌµ¿ÇÏ¿© ´Ü°Ë 3Å¸ °ø°İ
+        // í”Œë ˆì´ì–´ì—ê²Œ ë¹ ë¥¸ ì†ë„ë¡œ ì´ë™í•˜ì—¬ ë‹¨ê²€ 3íƒ€ ê³µê²©
         StartCoroutine(FastKnifeAttackCoroutine());
     }
     IEnumerator FastKnifeAttackCoroutine()
     {
-        Debug.Log("FastKnifeAttackCoroutine");
+        LookAt(); // í”Œë ˆì´ì–´ ì³ë‹¤ë³´ê¸°
 
-        LookAt(); // ÇÃ·¹ÀÌ¾î ÃÄ´Ùº¸±â
-
-        // °ø°İ ÁØºñ ÀÚ¼¼ ÃëÇÏ±â
+        // ê³µê²© ì¤€ë¹„ ìì„¸ ì·¨í•˜ê¸°
         ar.SetTrigger("FastKnifeAttackWaiting");
 
         float t = 1;
@@ -441,7 +417,7 @@ public class RedHood : Monster
             sr.color = color;
         }
 
-        // °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         ar.SetTrigger("FastKnifeAttack");
     }
     void LastFastKnifeAttack()
@@ -487,28 +463,27 @@ public class RedHood : Monster
         NextActionSetting();
     }
     #endregion
-    #region Àº½Å ÈÄ Ä¡¸íÅ¸ °¡ÇÏ±â                         [ StealthKnifeAttack ]
+    #region ì€ì‹  í›„ ì¹˜ëª…íƒ€ ê°€í•˜ê¸°                         [ StealthKnifeAttack ]
     void StealthKnifeAttack()
     {
-        Debug.Log("Àº½Å Ä¡¸íÅ¸");
         StartCoroutine(StealthKnifeAttackCoroutine());
     }
     IEnumerator StealthKnifeAttackCoroutine()
     {
-        // °ø°İ ÁØºñ ÀÚ¼¼ ÃëÇÏ±â
+        // ê³µê²© ì¤€ë¹„ ìì„¸ ì·¨í•˜ê¸°
         ar.SetTrigger("StealthAttackWaiting");
 
-        yield return new WaitForSeconds(0.5f); // ÀÚ¼¼ ÃëÇÑ ÈÄ 0.5ÃÊ µô·¹ÀÌ
+        yield return new WaitForSeconds(0.5f); // ìì„¸ ì·¨í•œ í›„ 0.5ì´ˆ ë”œë ˆì´
 
-        particles[0].Play(); // ¿¬¸· ÀÌÆåÆ® Àç»ı
+        particles[0].Play(); // ì—°ë§‰ ì´í™íŠ¸ ì¬ìƒ
 
-        sr.enabled = false; // »¡°£ ¸ÁÅä ¼û±â±â
+        sr.enabled = false; // ë¹¨ê°„ ë§í†  ìˆ¨ê¸°ê¸°
 
-        cd.enabled = false; // Ãæµ¹ ºñÈ°¼ºÈ­
+        cd.enabled = false; // ì¶©ëŒ ë¹„í™œì„±í™”
 
-        hpBarParent.SetActive(false); // hp¹Ù ¼û±â±â
+        hpBarParent.SetActive(false); // hpë°” ìˆ¨ê¸°ê¸°
 
-        yield return new WaitForSeconds(1f); // ¿¬¸· Àç»ı, Ç¥½Ã °¡¸®°í 1ÃÊ ÈÄ
+        yield return new WaitForSeconds(1f); // ì—°ë§‰ ì¬ìƒ, í‘œì‹œ ê°€ë¦¬ê³  1ì´ˆ í›„
 
         float t = 0;
 
@@ -529,33 +504,30 @@ public class RedHood : Monster
             transform.position = currentPosition;
         }
 
-        sr.enabled = true; // »¡°£ ¸ÁÅä Ç¥½Ã
+        sr.enabled = true; // ë¹¨ê°„ ë§í†  í‘œì‹œ
 
-        particles[0].Play(); // ¿¬¸· ÀÌÆåÆ® Àç»ı
+        particles[0].Play(); // ì—°ë§‰ ì´í™íŠ¸ ì¬ìƒ
 
-        cd.enabled = true; // Ãæµ¹ È°¼ºÈ­
+        cd.enabled = true; // ì¶©ëŒ í™œì„±í™”
 
-        hpBarParent.SetActive(true); // hp¹Ù Ç¥½Ã
+        hpBarParent.SetActive(true); // hpë°” í‘œì‹œ
 
-        LookAt(); // ÇÃ·¹ÀÌ¾î ÃÄ´Ùº¸°Ô ÇÏ±â
+        LookAt(); // í”Œë ˆì´ì–´ ì³ë‹¤ë³´ê²Œ í•˜ê¸°
 
-        // °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         ar.SetTrigger("StealthAttack");
     }
     #endregion
-    #region »ç°ú¸¦ ´øÁö¸é¼­ ÀÌµ¿                          [ ThrowPoisonApple ]
+    #region ì‚¬ê³¼ë¥¼ ë˜ì§€ë©´ì„œ ì´ë™                          [ ThrowPoisonApple ]
     void ThrowPoisonApple()
     {
-        Debug.Log("»ç°ú ½ÃÀÛ");
         StartCoroutine(ThrowPoisonAppleCoroutine());
     }
     IEnumerator ThrowPoisonAppleCoroutine()
     {
-        Debug.Log("ThrowPoisonAppleCoroutine");
-
         yield return null;
 
-        ar.SetTrigger("ThrowAppleRun"); // ´Ş¸®±â ¾Ö´Ï¸ŞÀÌ¼Ç
+        ar.SetTrigger("ThrowAppleRun"); // ë‹¬ë¦¬ê¸° ì• ë‹ˆë©”ì´ì…˜
 
         float goal = (10f * (transform.position.x <= 0 ? 1 : -1));
 
@@ -600,10 +572,9 @@ public class RedHood : Monster
         NextActionSetting();
     }
     #endregion
-    #region Á¤¸éÀ¸·Î ÀÏÁ¤·®¸¸Å­ ÀÌµ¿                      [ ForwardMove ]
+    #region ì •ë©´ìœ¼ë¡œ ì¼ì •ëŸ‰ë§Œí¼ ì´ë™                      [ ForwardMove ]
     void ForwardMove(float moveValue)
     {
-        Debug.Log("ÀÌµ¿·® ¹ß»ı");
         StartCoroutine(ForwardMoveCoroutine(moveValue));
     }
     IEnumerator ForwardMoveCoroutine(float moveValue)
@@ -626,7 +597,7 @@ public class RedHood : Monster
         }
     }
     #endregion
-    #region ÇÃ·¹ÀÌ¾î È¤Àº ¹«¾ğ°¡¸¦ ¹Ù¶óº¸±â               [ LookAt ]
+    #region í”Œë ˆì´ì–´ í˜¹ì€ ë¬´ì–¸ê°€ë¥¼ ë°”ë¼ë³´ê¸°               [ LookAt ]
     void LookAt(float pos = float.MaxValue)
     {
         if (pos != float.MaxValue)
@@ -635,22 +606,22 @@ public class RedHood : Monster
             transform.localScale = new Vector3(dir == Dir.Left ? 1 : -1, 1, 1);
     }
     #endregion
-    #region ´ÙÀ½ Çàµ¿ °áÁ¤                                [ NextActionSetting ]
+    #region ë‹¤ìŒ í–‰ë™ ê²°ì •                                [ NextActionSetting ]
     void NextActionSetting(float delay = 0)
     {
         if (cd.enabled == false)
         {
             cd.enabled = true;
         }
-        current++; // ÇöÀç ÆĞÅÏ¿¡¼­ ´ÙÀ½ ¾×¼ÇÀ¸·Î ³Ñ±ä´Ù
+        current++; // í˜„ì¬ íŒ¨í„´ì—ì„œ ë‹¤ìŒ ì•¡ì…˜ìœ¼ë¡œ ë„˜ê¸´ë‹¤
 
-        // ¸¸¾à ÇöÀç ÆĞÅÏÀÌ ³¡³µÀ» °æ¿ì
+        // ë§Œì•½ í˜„ì¬ íŒ¨í„´ì´ ëë‚¬ì„ ê²½ìš°
         if (current >= patternActions[phase][pattern].Length)
         {
-            // ·£´ıÀ¸·Î ÆĞÅÏ ÇÏ³ª¸¦ ¼±ÅÃ ÇÑ´Ù
+            // ëœë¤ìœ¼ë¡œ íŒ¨í„´ í•˜ë‚˜ë¥¼ ì„ íƒ í•œë‹¤
             pattern = UnityEngine.Random.Range(0, patternActions[phase].Length);
 
-            // Ã¹ ºÎºĞ ¾×¼ÇÀ¸·Î ÃÊ±âÈ­ ÇÑ´Ù
+            // ì²« ë¶€ë¶„ ì•¡ì…˜ìœ¼ë¡œ ì´ˆê¸°í™” í•œë‹¤
             current = 0;
         }
 
@@ -685,20 +656,20 @@ public class RedHood : Monster
     }
     IEnumerator NextActionSettingCoroutine(float delay)
     {
-        if (!IsAlive) // Ã¼·ÂÀÌ 0 ÀÌÇÏ°¡ µÆÀ» °æ¿ì
+        if (!IsAlive) // ì²´ë ¥ì´ 0 ì´í•˜ê°€ ëì„ ê²½ìš°
         {
-            // Phase°¡ 2ÀÏ °æ¿ì¿¡´Â ¸¶Áö¸· ÆäÀÌÁîÀÌ¹Ç·Î Die 
+            // Phaseê°€ 2ì¼ ê²½ìš°ì—ëŠ” ë§ˆì§€ë§‰ í˜ì´ì¦ˆì´ë¯€ë¡œ Die 
             if (phase == 2) DieSetting();
 
-            // Phase°¡ 0,1ÀÏ °æ¿ì¿¡´Â ³²Àº ÆäÀÌÁî°¡ ÀÖÀ¸¹Ç·Î NextPhase
+            // Phaseê°€ 0,1ì¼ ê²½ìš°ì—ëŠ” ë‚¨ì€ í˜ì´ì¦ˆê°€ ìˆìœ¼ë¯€ë¡œ NextPhase
             else NextPhaseSetting();
         }
         else
         {
-            // delay°¡ 0º¸´Ù Å©´Ù¸é ±âº» µô·¹ÀÌ¸¦ ¹«½ÃÇÏ°í delay µ¿¾È ±â´Ù¸°´Ù
+            // delayê°€ 0ë³´ë‹¤ í¬ë‹¤ë©´ ê¸°ë³¸ ë”œë ˆì´ë¥¼ ë¬´ì‹œí•˜ê³  delay ë™ì•ˆ ê¸°ë‹¤ë¦°ë‹¤
             if (delay > 0) yield return new WaitForSeconds(delay);
 
-            // ±âº»°ªÀÎ 0ÀÌ¶ó¸é ±âº» ActionDelay¸¦ Àû¿ëÇÑ´Ù
+            // ê¸°ë³¸ê°’ì¸ 0ì´ë¼ë©´ ê¸°ë³¸ ActionDelayë¥¼ ì ìš©í•œë‹¤
             else if (delay == 0) yield return new WaitForSeconds(nextActionDelay);
 
             yield return null;
@@ -713,28 +684,26 @@ public class RedHood : Monster
     }
     void NextPhaseSetting()
     {
-        phase++; // ÆäÀÌÁî¸¦ ÇÑ´Ü°è ³ôÀÎ´Ù
+        phase++; // í˜ì´ì¦ˆë¥¼ í•œë‹¨ê³„ ë†’ì¸ë‹¤
 
-        cd.enabled = false; // Ãæµ¹ ºñÈ°¼ºÈ­
+        cd.enabled = false; // ì¶©ëŒ ë¹„í™œì„±í™”
 
-        Debug.Log("ÇöÀç Phase : " + phase.ToString());
-
-        // ·£´ıÀ¸·Î ÆĞÅÏ ÇÏ³ª¸¦ ¼±ÅÃ ÇÑ´Ù
+        // ëœë¤ìœ¼ë¡œ íŒ¨í„´ í•˜ë‚˜ë¥¼ ì„ íƒ í•œë‹¤
         pattern = UnityEngine.Random.Range(0, patternActions[phase].Length);
 
-        current = 0; // ÆĞÅÏÀÇ ¼ø¼­¸¦ 0À¸·Î ÃÊ±âÈ­
+        current = 0; // íŒ¨í„´ì˜ ìˆœì„œë¥¼ 0ìœ¼ë¡œ ì´ˆê¸°í™”
 
-        if (phase == 1) // Áß°£ ÆäÀÌÁîÀÏ °æ¿ì
+        if (phase == 1) // ì¤‘ê°„ í˜ì´ì¦ˆì¼ ê²½ìš°
         {
             ar.SetTrigger("Phase_1");
 
-            particles[4].Play(); // Phase_1 Effect Àç»ı
+            particles[4].Play(); // Phase_1 Effect ì¬ìƒ
         }
-        else // ¸¶Áö¸· ÆäÀÌÁîÀÏ °æ¿ì
+        else // ë§ˆì§€ë§‰ í˜ì´ì¦ˆì¼ ê²½ìš°
         {
             ar.SetTrigger("Phase_2");
 
-            particles[5].Play(); // Phase_2 Effect Àç»ı
+            particles[5].Play(); // Phase_2 Effect ì¬ìƒ
             particles[6].Play(); 
             particles[7].Play(); 
         }
@@ -759,14 +728,14 @@ public class RedHood : Monster
 
         Hp = maxHp;
 
-        cd.enabled = true; // Ãæµ¹ È°¼ºÈ­
+        cd.enabled = true; // ì¶©ëŒ í™œì„±í™”
     }
     void NextPhaseActionSelect()
     {
-        // Phase 1ÀÏ ¶§´Â È¯¿µ ÀÎ»ç·Î µµ³¢ °ø°İÀ» ½ÃÀüÇÑ´Ù
+        // Phase 1ì¼ ë•ŒëŠ” í™˜ì˜ ì¸ì‚¬ë¡œ ë„ë¼ ê³µê²©ì„ ì‹œì „í•œë‹¤
         if (phase == 1) AxeAttack();
 
-        // Phase 2ÀÏ ¶§´Â È¯¿µ ÀÎ»ç·Î µµ³¢ °­°ø°İÀ» ½ÃÀüÇÑ´Ù
+        // Phase 2ì¼ ë•ŒëŠ” í™˜ì˜ ì¸ì‚¬ë¡œ ë„ë¼ ê°•ê³µê²©ì„ ì‹œì „í•œë‹¤
         else ChargeAxeAttack();
     }
     void DieSetting()

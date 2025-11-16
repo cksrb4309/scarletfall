@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerFlags
 {
@@ -20,7 +20,7 @@ public class PlayerFlags
     public int SwingCombo = 0;
     public int JumpSwingCombo = 0;
 
-    public bool Invincibility = false; // trueÀÏ ½Ã ¹«Àû
+    public bool Invincibility = false; // trueì¼ ì‹œ ë¬´ì 
     public bool SwingCheck = false;
     public bool IsStop = false;
     public bool IsAttacking = false;
@@ -33,6 +33,27 @@ public class PlayerFlags
     public bool IsLifesteal = false;
     public bool IsMaximizer = false;
     public bool TriggerLocked = false;
-    public bool Leaf = false;       // ¾ÆÀÌÅÛÀ¸·Î ÀÎÇØ ½ºÅÂ¹Ì³ª ¼Ò¸ğ°¡ ÇÊ¿ä¾øÀ» ¶§
-    public bool Shield = false;      // ¾ÆÀÌÅÛÀ¸·Î ÀÎÇØ °ø°İÀ» ¸·À» ¼ö ÀÖÀ» ¶§
+    public bool Leaf = false;       // ì•„ì´í…œìœ¼ë¡œ ì¸í•´ ìŠ¤íƒœë¯¸ë‚˜ ì†Œëª¨ê°€ í•„ìš”ì—†ì„ ë•Œ
+    public bool Shield = false;      // ì•„ì´í…œìœ¼ë¡œ ì¸í•´ ê³µê²©ì„ ë§‰ì„ ìˆ˜ ìˆì„ ë•Œ
+
+    public void ResetFlags()
+    {
+        SwingCombo = 0;
+        JumpSwingCombo = 0;
+        Invincibility = false;
+        SwingCheck = false;
+        IsStop = false;
+        IsAttacking = false;
+        JumpUse = false;
+        Jumping = false;
+        Rolling = false;
+        DieCheck = false;
+        FastDownAttackCheck = false;
+        FastDownAttacking = false;
+        IsLifesteal = false;
+        IsMaximizer = false;
+        TriggerLocked = false;
+        Leaf = false;
+        Shield = false;
+    }
 }

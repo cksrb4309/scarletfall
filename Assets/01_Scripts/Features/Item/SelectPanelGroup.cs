@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
@@ -103,11 +103,9 @@ public class SelectPanelGroup : MonoBehaviour
     }
     public IEnumerator StartSelectItemCoroutine()
     {
-        Debug.Log("StartSelectItemCoroutine ½ÇÇà");
-
         isCheck = false;
 
-        ItemSetting(); // ¾ÆÀÌÅÛÀ» ½½·Ô¿¡ ÀåÂø½ÃÅ´
+        ItemSetting(); // ì•„ì´í…œì„ ìŠ¬ë¡¯ì— ì¥ì°©ì‹œí‚´
 
         selectIndex = -1;
 
@@ -146,7 +144,7 @@ public class SelectPanelGroup : MonoBehaviour
     }
     void EndSelect()
     {
-        Inventory.instance.GetItem(selectPanels[selectIndex].item); // ¾ÆÀÌÅÛ ³Ñ±è
+        Inventory.instance.GetItem(selectPanels[selectIndex].item); // ì•„ì´í…œ ë„˜ê¹€
 
         Pair tmp = itemIndexList[selectIndex];
 
@@ -158,13 +156,13 @@ public class SelectPanelGroup : MonoBehaviour
         }
         selectIndex = -1;
 
-        items[tmp.x].RemoveAt(tmp.y); // ¾ÆÀÌÅÛ ¸®½ºÆ®¿¡¼­ Á¦°Å
+        items[tmp.x].RemoveAt(tmp.y); // ì•„ì´í…œ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°
 
-        battleLoader.ActivePortal(); // Æ÷Å» È°¼ºÈ­
+        battleLoader.ActivePortal(); // í¬íƒˆ í™œì„±í™”
 
         currentStage.NextMove();
 
-        Inventory.BattleEnd(); // ÀüÅõ¿Í º¸»óÀ» ¸ğµÎ ¼öÇà ÇßÀ¸¸é ÀüÅõ°¡ ³¡³µÀ» ¶§ ³ªÅ¸³ª´Â È¿°ú È°¼ºÈ­
+        Inventory.BattleEnd(); // ì „íˆ¬ì™€ ë³´ìƒì„ ëª¨ë‘ ìˆ˜í–‰ í–ˆìœ¼ë©´ ì „íˆ¬ê°€ ëë‚¬ì„ ë•Œ ë‚˜íƒ€ë‚˜ëŠ” íš¨ê³¼ í™œì„±í™”
     }
     public void OnSelectPanel(int index)
     {

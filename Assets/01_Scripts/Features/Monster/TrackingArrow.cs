@@ -54,8 +54,6 @@ public class TrackingArrow : MonoBehaviour
 
             nextAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            Debug.Log("NextAngle:" + nextAngle.ToString());
-
             rb.SetRotation(Mathf.LerpAngle(currentAngle, nextAngle, t));
 
             yield return null;

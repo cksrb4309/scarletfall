@@ -43,8 +43,6 @@ public class StatusData : ScriptableObject
 
         playerDamage += other.playerDamage - baseData.playerDamage;
         playerHp += other.playerHp - baseData.playerHp;
-        Debug.Log("OtherHP:" + other.playerHp.ToString() + "/BaseHP:" + baseData.playerHp.ToString());
-        Debug.Log("PlayerHP:" + playerHp.ToString());
         playerStaminaRegen += other.playerStaminaRegen - baseData.playerStaminaRegen;
         playerMoveSpeed += other.playerMoveSpeed - baseData.playerMoveSpeed;
         playerAvoidChance += other.playerAvoidChance - baseData.playerAvoidChance;

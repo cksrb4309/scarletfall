@@ -13,6 +13,7 @@ public class FastDownEffect : MonoBehaviour
 
     public void Enable(Vector3 pos)
     {
+        pos.z = transform.position.z;
         transform.position = pos;
 
         Vector3 randomPos = Vector3.zero;

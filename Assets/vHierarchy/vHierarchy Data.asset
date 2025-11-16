@@ -24,6 +24,9 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-559a1ef458d0db1408771da534f78b2c-885758302-0
         - globalObjectIdString: GlobalObjectId_V1-2-559a1ef458d0db1408771da534f78b2c-501328842-0
         - globalObjectIdString: GlobalObjectId_V1-2-559a1ef458d0db1408771da534f78b2c-1066156044-0
+        - globalObjectIdString: GlobalObjectId_V1-2-559a1ef458d0db1408771da534f78b2c-1871029578-0
+        - globalObjectIdString: GlobalObjectId_V1-2-559a1ef458d0db1408771da534f78b2c-1025231828-0
+        - globalObjectIdString: GlobalObjectId_V1-2-559a1ef458d0db1408771da534f78b2c-709634014-0
         values:
         - colorIndex: 8
           iconNameOrGuid: 
@@ -46,6 +49,18 @@ MonoBehaviour:
           isIconRecursive: 0
           isColorRecursive: 0
         - colorIndex: 2
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 8
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 8
+          iconNameOrGuid: 
+          isIconRecursive: 0
+          isColorRecursive: 0
+        - colorIndex: 8
           iconNameOrGuid: 
           isIconRecursive: 0
           isColorRecursive: 0

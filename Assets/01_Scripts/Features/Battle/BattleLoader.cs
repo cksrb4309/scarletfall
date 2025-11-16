@@ -66,18 +66,20 @@ public class BattleLoader : MonoBehaviour
         {
             stageTextUI.text = "Stage " + (stage + 1).ToString();
         }
-        ScreenTransition.Play(
-            startTransition: stage < 10 ? "Leaf_FadeOut" : "RedLeaf_FadeOut",
-            endTransition: stage < 10 ? "Leaf_FadeIn" : "RedLeaf_FadeIn",
-            action: () =>
+        ScreenTransition.Play(new ScreenTransitionOptions
+        {
+            StartTransitionName = stage < 10 ? "Leaf_FadeOut" : "RedLeaf_FadeOut",
+            EndTransitionName = stage < 10 ? "Leaf_FadeIn" : "RedLeaf_FadeIn",
+            FadeStart = 0f,
+            FadeEnd = 0f,
+            FadeDuration = 2f,
+            OnTransitionComplete = () =>
             {
                 HideLobby();
                 SetRedHoodLevel();
                 DOVirtual.DelayedCall(5f, () => Battle.instance.StartBattle());
-            },
-            fadeStart: 0f,
-            fadeEnd: 0f,
-            duration: 2f);
+            }
+        });
     }
     public void ClearLoad()
     {
@@ -86,18 +88,19 @@ public class BattleLoader : MonoBehaviour
 
         if (stage != 10)
         {
-            ScreenTransition.Play(
-            startTransition: "Leaf_FadeOut",
-            endTransition: "Leaf_FadeIn",
-            action: () =>
+            ScreenTransition.Play(new ScreenTransitionOptions
             {
-                ShowLobby();
-
-                DOVirtual.DelayedCall(5f, () => Inventory.instance.selectPanelGroup.StartSelectItem());
-            },
-            fadeStart: 0f,
-            fadeEnd: 0f,
-            duration: 2f);
+                StartTransitionName = "Leaf_FadeOut",
+                EndTransitionName = "Leaf_FadeIn",
+                FadeStart = 0f,
+                FadeEnd = 0f,
+                FadeDuration = 2f,
+                OnTransitionComplete = () =>
+                {
+                    ShowLobby();
+                    DOVirtual.DelayedCall(5f, () => Inventory.instance.selectPanelGroup.StartSelectItem());
+                }
+            });
         }
     }
     public void ActivePortal()

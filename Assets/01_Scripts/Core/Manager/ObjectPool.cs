@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
@@ -8,12 +8,12 @@ public class ObjectPool : MonoBehaviour
 {
     [HideInInspector] public Transform parent = null;
 
-    public GameObject prefab;  // ¹Ì¸® »ı¼ºÇÒ ¿ÀºêÁ§Æ®ÀÇ ¿øº»(prefab)
-    public int initialSize = 10;  // ÃÊ±â Ç® »çÀÌÁî
+    public GameObject prefab;  // ë¯¸ë¦¬ ìƒì„±í•  ì˜¤ë¸Œì íŠ¸ì˜ ì›ë³¸(prefab)
+    public int initialSize = 10;  // ì´ˆê¸° í’€ ì‚¬ì´ì¦ˆ
 
     private Queue<GameObject> pool = new Queue<GameObject>();
 
-    // Ç® ÃÊ±âÈ­
+    // í’€ ì´ˆê¸°í™”
     private void Start()
     {
         for (int i = 0; i < initialSize; i++)
@@ -24,7 +24,7 @@ public class ObjectPool : MonoBehaviour
         }
     }
 
-    // ¿ÀºêÁ§Æ® °¡Á®¿À±â (GameObject¸¦ Á÷Á¢ ¹İÈ¯)
+    // ì˜¤ë¸Œì íŠ¸ ê°€ì ¸ì˜¤ê¸° (GameObjectë¥¼ ì§ì ‘ ë°˜í™˜)
     public GameObject GetObject()
     {
         if (pool.Count > 0)
@@ -37,23 +37,20 @@ public class ObjectPool : MonoBehaviour
         {
             GameObject newObj = GameObject.Instantiate(prefab, parent);
 
-            newObj.SetActive(true);
-
             return newObj;
         }
     }
 
-    // ¿ÀºêÁ§Æ® ¹İÈ¯ÇÏ±â
+    // ì˜¤ë¸Œì íŠ¸ ë°˜í™˜í•˜ê¸°
     public void ReturnObject(GameObject obj)
     {
         obj.SetActive(false);
         pool.Enqueue(obj);
     }
 
-    // Á¦³×¸¯ ¸Ş¼­µå·Î Æ¯Á¤ ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿À±â
+    // ì œë„¤ë¦­ ë©”ì„œë“œë¡œ íŠ¹ì • ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜¤ê¸°
     public T GetObject<T>() where T : Component
     {
-        GameObject obj = GetObject();  // ±âÁ¸ GetObject ¸Ş¼­µå¸¦ ÀÌ¿ëÇØ ¿ÀºêÁ§Æ®¸¦ °¡Á®¿È
-        return obj.GetComponent<T>();  // T Å¸ÀÔÀÇ ÄÄÆ÷³ÍÆ®¸¦ ¹İÈ¯
+        return GetObject().GetComponent<T>();  // T íƒ€ì…ì˜ ì»´í¬ë„ŒíŠ¸ë¥¼ ë°˜í™˜
     }
 }

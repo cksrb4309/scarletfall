@@ -1,48 +1,49 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VInspector;
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
-    static InputManager instance = null;
-
     [SerializeField] SerializedDictionary<InputType, InputActionReference> inputActions;
 
     Dictionary<InputType, int> inputActionCounts = new Dictionary<InputType, int>();
 
-    private void Awake()
-    {
-        if (instance != null) Destroy(gameObject);
-
-        instance = this;
-        transform.parent = null;
-        DontDestroyOnLoad(gameObject);
-    }
     public static InputActionReference GetInputAction(InputType inputType)
     {
-        if (!instance.inputActions.ContainsKey(inputType))
+        if (!Instance.inputActions.ContainsKey(inputType))
         {
-            Debug.LogWarning("¿äÃ»ÇÑ InputType¿¡ ¸Â´Â InputActionÀÌ ¾ø½À´Ï´Ù ! : " + inputType.ToString());
+            Debug.LogWarning("ìš”ì²­í•œ InputTypeì— ë§žëŠ” InputActionì´ ì—†ìŠµë‹ˆë‹¤ ! : " + inputType.ToString());
 
             return null;
         }
-        if (instance.inputActionCounts.ContainsKey(inputType)) instance.inputActionCounts[inputType]++;
+        if (Instance.inputActionCounts.ContainsKey(inputType)) Instance.inputActionCounts[inputType]++;
 
-        else instance.inputActionCounts[inputType] = 1;
+        else Instance.inputActionCounts[inputType] = 1;
 
-        instance.inputActions[inputType].action.Enable();
+        Instance.inputActions[inputType].action.Enable();
 
-        return instance.inputActions[inputType];
+        return Instance.inputActions[inputType];
     }
     public static void Release(InputType inputType)
     {
-        if (!instance.inputActions.ContainsKey(inputType))
+        if (instance == null) return;
+        
+        if (!instance.inputActions.ContainsKey(inputType)) return;
+        
+        if (--instance.inputActionCounts[inputType] == 0)
         {
-            Debug.LogWarning("ÇØÁ¦ ¿äÃ»ÇÑ InputType¿¡ ¸Â´Â InputActionÀÌ ¾ø½À´Ï´Ù ! : " + inputType.ToString());
-
-            return;
+            instance.inputActions[inputType].action.Disable();
         }
-        if (--instance.inputActionCounts[inputType] == 0) instance.inputActions[inputType].action.Disable();
+    }
+    private void OnDisable()
+    {
+        foreach (var kvp in inputActionCounts)
+        {
+            if (kvp.Value > 0)
+            {
+                inputActions[kvp.Key].action.Disable();
+            }
+        }
     }
 }
 
@@ -55,4 +56,5 @@ public enum InputType
     Attack,
     Roll,
     Interact,
+    Escape,
 }

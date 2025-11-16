@@ -1,32 +1,41 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices;
+using UnityEngine.InputSystem;
 
 public class TitleScript : MonoBehaviour
 {
     public bool isBgm = false;
     public GameObject controllerPanel;
     public GameObject optionPanel;
+
+    InputActionReference escapeInputAction = null;
+
     private void Start()
     {
-        if (isBgm) 
+        if (isBgm)
+        {
             SoundManager.Play("TitleBGM", SoundType.Background);
+        }
 
         Time.timeScale = 1;
     }
 
     public void GameSceneLoad()
     {
-        ScreenTransition.Play(
-            startTransition: "Leaf_FadeOut",
-            endTransition: "Leaf_FadeIn",
-            action: () =>
+        ScreenTransition.Play(new ScreenTransitionOptions
+        {
+            StartTransitionName = "Leaf_FadeOut",
+            EndTransitionName = "Leaf_FadeIn",
+            OnTransitionComplete = () =>
             {
-                LoadScene();
+                SoundManager.Play("GameBGM", SoundType.Background);
             },
-            fadeStart: 0f,
-            fadeEnd: 0f,
-            duration: 0.5f);
+            SceneName = "Game",
+            FadeStart = 0f,
+            FadeEnd = 0f,
+            FadeDuration = 0.5f
+        });
     }
     public void OpenControlPanel()
     {
@@ -46,25 +55,14 @@ public class TitleScript : MonoBehaviour
     {
         controllerPanel.SetActive(false);
     }
-    private void LoadScene()
-    {
-        SoundManager.Play("GameBGM", SoundType.Background);
-
-        SceneManager.LoadScene("Game");
-    }
     public void ExitButton()
-    {/*
-#if UNITY_WEBGL && !UNITY_EDITOR
-    CloseTab(); // 웹 빌드 시에만 JavaScript 함수 호출
-#else*/
-    Application.Quit(); // 에디터나 다른 환경에서는 일반 종료
-//#endif
+    {
+        Application.Quit(); // 에디터나 다른 환경에서는 일반 종료
     }
-
     public void Update()
     {
-        // TODO : ESC 입력 변경 필요
-        if (Input.GetKeyDown(KeyCode.Escape)){
+        if (escapeInputAction.action.WasPressedThisFrame())
+        {
             if (!optionPanel.activeSelf)
             {
                 OpenOptionPanel();
@@ -74,5 +72,13 @@ public class TitleScript : MonoBehaviour
                 CloseOptionPanel();
             }
         }
+    }
+    private void OnEnable()
+    {
+        escapeInputAction = InputManager.GetInputAction(InputType.Escape);
+    }
+    private void OnDisable()
+    {
+        InputManager.Release(InputType.Escape);
     }
 }

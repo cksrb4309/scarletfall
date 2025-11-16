@@ -13,8 +13,6 @@ public class Bow : MonoBehaviour
         {
             Arrow arrow = PoolingManager.Instance.GetObject<Arrow>("Arrow");
 
-            Debug.Log("Arrow:" + arrow.gameObject.name);
-
             arrow.transform.position = startPos.position;
 
             arrow.transform.localScale = new Vector3(pc.currentDir == Dir.Right ? 1 : -1, 1, 1);

@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : Component
 {
-    private static T instance;
+    protected static T instance;
     public static T Instance
     {
         get
         {
-            if (instance == null) SetupInstance();
+            if (instance == null)
+            {
+                SetupInstance();
+            }
 
             return instance;
         }
@@ -28,14 +31,32 @@ public class Singleton<T> : MonoBehaviour where T : Component
 
             DontDestroyOnLoad(gameObj);
         }
+        else
+        {
+            if (instance.transform.parent != null)
+            {
+                instance.transform.SetParent(null);
+            }
+
+            DontDestroyOnLoad(instance);
+        }
     }
-    protected virtual void Awake()
+    public virtual void Awake()
     {
         if (instance != null && instance != this)
         {
-            Debug.Log("°ãÄ¡´Â Singleton Á¦°Å : " + typeof(T).Name);
-
             Destroy(gameObject);
+        }
+        else
+        {
+            instance = this as T;
+
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+            }
+
+            DontDestroyOnLoad(gameObject);
         }
     }
 }

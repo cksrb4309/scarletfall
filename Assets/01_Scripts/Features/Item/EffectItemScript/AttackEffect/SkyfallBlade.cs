@@ -19,8 +19,6 @@ public class SkyfallBlade : ActiveEffect
 
         ShockWave shockWave = PoolingManager.Instance.GetObject<ShockWave>("ShockWave");
 
-        Debug.Log("ShockWave:" + shockWave.gameObject.name);
-
         shockWave.transform.localScale = new Vector3(pc.currentDir == Dir.Right ? 1 : -1, 2, 1);
 
         shockWave.transform.position = new Vector3(startPos.position.x, -2.769f, 0);

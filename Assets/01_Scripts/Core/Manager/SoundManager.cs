@@ -1,17 +1,14 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
-    static SoundManager instance = null;
-
     public AudioSource[] backgroundAudios;
     public AudioSource effectAudio;
 
-    public float bgmVolume = 1.0f;     // ºê±İ ÃÖ´ë ¼Ò¸® Å©±â
-    public float sfxVolume = 1.0f;     // È¿°úÀ½ ÃÖ´ë ¼Ò¸® Å©±â
-
+    public float bgmVolume = 1.0f;     // ë¸Œê¸ˆ ìµœëŒ€ ì†Œë¦¬ í¬ê¸°
+    public float sfxVolume = 1.0f;     // íš¨ê³¼ìŒ ìµœëŒ€ ì†Œë¦¬ í¬ê¸°
 
     public Sound[] soundArray;
 
@@ -23,22 +20,18 @@ public class SoundManager : MonoBehaviour
     bool isBackgroundSoundPlaying = false;
     int currentBackgroundIndex = 0;
 
-    private void Awake()
+    public override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
+        base.Awake();
 
-            for (int i = 0; i < soundArray.Length; i++)
-                clipDictionary.Add(soundArray[i].clipName, soundArray[i].audioClip);
-
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        for (int i = 0; i < soundArray.Length; i++)
         {
-            Destroy(gameObject);
+            clipDictionary.Add(soundArray[i].clipName, soundArray[i].audioClip);
         }
-    }
+
+        bgmVolume = PlayerPrefs.GetFloat("BGM_Volume", 1.0f);
+        sfxVolume = PlayerPrefs.GetFloat("SFX_Volume", 1.0f);
+    } 
     public static void Play(string clipName, SoundType type)
     {
         if (type == SoundType.Effect)
@@ -75,7 +68,7 @@ public class SoundManager : MonoBehaviour
     {
         if (clipName == string.Empty)
         {
-            Debug.Log("Audio°¡ ºñ¾îÀÖ½À´Ï´Ù");
+            Debug.Log("Audioê°€ ë¹„ì–´ìˆìŠµë‹ˆë‹¤");
         }
         else if (clipDictionary.ContainsKey(clipName))
         {
@@ -83,14 +76,14 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("clipName:" + clipName + "°ú(¿Í) ÀÏÄ¡ÇÏ´Â Sound°¡ ¾ø½À´Ï´Ù");
+            Debug.LogWarning("clipName:" + clipName + "ê³¼(ì™€) ì¼ì¹˜í•˜ëŠ” Soundê°€ ì—†ìŠµë‹ˆë‹¤");
         }
     }
     void BackgroundPlay(string clipName)
     {
         if (clipName == string.Empty)
         {
-            Debug.Log("Audio°¡ ºñ¾îÀÖ½À´Ï´Ù");
+            Debug.Log("Audioê°€ ë¹„ì–´ìˆìŠµë‹ˆë‹¤");
         }
         else if (clipDictionary.ContainsKey(clipName))
         {
@@ -111,7 +104,7 @@ public class SoundManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("clipName:" + clipName + "°ú(¿Í) ÀÏÄ¡ÇÏ´Â Sound°¡ ¾ø½À´Ï´Ù");
+            Debug.LogWarning("clipName:" + clipName + "ê³¼(ì™€) ì¼ì¹˜í•˜ëŠ” Soundê°€ ì—†ìŠµë‹ˆë‹¤");
         }
     }
     IEnumerator BackgroundAudioFadeCoroutine()
@@ -154,6 +147,14 @@ public class SoundManager : MonoBehaviour
     public static float GetSFXVolume()
     {
         return instance.sfxVolume;
+    }
+    private void OnDisable()
+    {
+        if (instance == this)
+        {
+            PlayerPrefs.SetFloat("BGM_Volume", bgmVolume);
+            PlayerPrefs.SetFloat("SFX_Volume", sfxVolume);
+        }
     }
 }
 

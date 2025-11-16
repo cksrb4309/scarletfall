@@ -20,8 +20,6 @@ public class MaximizerSupport : MonoBehaviour
     }
     public void OffMaximizer()
     {
-        Debug.Log("ºÒ¸²");
-
         ar.SetTrigger("Off");
     }
 }

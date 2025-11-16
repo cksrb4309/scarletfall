@@ -14,8 +14,6 @@ public class Option : MonoBehaviour
     public Color[] color;
     private void Start()
     {
-
-
         bgmVolumeSlider.value = SoundManager.GetBGMVolume();
         sfxVolumeSlider.value = SoundManager.GetSFXVolume();
 
