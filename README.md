@@ -1,25 +1,20 @@
 # Scarletfall
 
 `빨간 망토의 비극`은 10개 스테이지와 최종 보스전으로 구성된 2D 액션 로그라이크 프로젝트입니다.  
-이 저장소는 게임 소개보다, 전투 시스템과 데이터 구조를 어떻게 구현했는지 보여주는 개발자 포트폴리오 용도로 정리했습니다.
+이 문서는 게임 소개보다, 전투 시스템과 데이터 구조를 어떻게 구현했는지 보여주는 개발자 포트폴리오 중심으로 정리했습니다.
 
-## Tech Stack
+## 기술 스택
 
 `Unity` `C#` `ScriptableObject` `Input System` `URP`
 
-## What I Implemented
+## 구현한 시스템
 
 - 스테이지 진입, 웨이브 스폰, 클리어, 보상 선택이 이어지는 전투 진행 구조
 - ScriptableObject 기반 스테이지, 웨이브, 아이템 데이터 구조
 - 보상 선택과 능력 효과 활성화를 연결한 성장 시스템
 - 3페이즈 보스 패턴과 엔딩 UI까지 연결되는 최종 콘텐츠 흐름
 
-## Implemented Systems
-
-<details open>
-  <summary><strong>1. Battle Flow</strong></summary>
-
-  <br>
+## 1. 전투 진행 구조
 
 - `Battle`과 `BattleLoader`를 중심으로 스테이지 시작, 웨이브 스폰, 클리어 판정, 다음 전투 진입 흐름을 연결했습니다.
 - 몬스터는 웨이브 단위로 스폰되며, 모든 적이 정리되면 클리어 연출과 보상 선택으로 이어집니다.
@@ -28,7 +23,8 @@
 - `Assets/01_Scripts/Features/Battle/Battle.cs`
 - `Assets/01_Scripts/Features/Battle/BattleLoader.cs`
 
-코드 발췌:
+<details>
+  <summary><strong>코드 보기</strong></summary>
 
 ```csharp
 public void StartBattle()
@@ -68,12 +64,9 @@ IEnumerator SpawnCoroutine()
 
 </details>
 
-<details>
-  <summary><strong>2. Data-Driven Content</strong></summary>
+## 2. 데이터 중심 콘텐츠 구조
 
-  <br>
-
-- 스테이지, 웨이브, 아이템, 확률 데이터를 ScriptableObject로 분리했습니다.
+- 스테이지, 웨이브, 몬스터, 아이템, 확률 데이터를 ScriptableObject로 분리했습니다.
 - 코드 수정 없이 데이터 교체만으로 전투 구성과 보상 밸런싱을 조정할 수 있게 설계했습니다.
 
 파일:
@@ -82,7 +75,8 @@ IEnumerator SpawnCoroutine()
 - `Assets/01_Scripts/Features/Item/Item.cs`
 - `Assets/01_Scripts/Features/Item/StatusData.cs`
 
-코드 발췌:
+<details>
+  <summary><strong>코드 보기</strong></summary>
 
 ```csharp
 [CreateAssetMenu(fileName = "LevelSetting", menuName = "Scriptable Objects/LevelSetting")]
@@ -108,10 +102,7 @@ public class Item : ScriptableObject
 
 </details>
 
-<details>
-  <summary><strong>3. Growth System</strong></summary>
-
-  <br>
+## 3. 성장 시스템
 
 - 전투 종료 후 3개의 보상 중 하나를 선택하는 구조를 구현했습니다.
 - 아이템 획득 시 스탯 누적과 능력 효과 활성화가 동시에 반영되도록 구성했습니다.
@@ -122,7 +113,8 @@ public class Item : ScriptableObject
 - `Assets/01_Scripts/Features/Item/SelectPanelGroup.cs`
 - `Assets/01_Scripts/Features/Item/EffectItemScript`
 
-코드 발췌:
+<details>
+  <summary><strong>코드 보기</strong></summary>
 
 ```csharp
 public void GetItem(Item item)
@@ -160,10 +152,7 @@ public void GetItem(Item item)
 
 </details>
 
-<details>
-  <summary><strong>4. Boss AI</strong></summary>
-
-  <br>
+## 4. 보스 AI 구조
 
 - 최종 보스는 3페이즈 구조로 구현했습니다.
 - 각 페이즈에서 여러 패턴 시퀀스를 `Action` 배열로 구성해, 패턴 추가와 순서 변경이 가능하도록 만들었습니다.
@@ -172,7 +161,8 @@ public void GetItem(Item item)
 파일:
 - `Assets/01_Scripts/Features/Monster/RedHood.cs`
 
-코드 발췌:
+<details>
+  <summary><strong>코드 보기</strong></summary>
 
 ```csharp
 patternActions = new Action[3][][];
@@ -196,41 +186,52 @@ patternActions[2][1][3] = ChargeArrow;
 
 </details>
 
-## Technical Points
+## 기술 포인트
 
-<details>
-  <summary><strong>State-Based Player Combat</strong></summary>
-
-  <br>
+### 상태 기반 플레이어 전투
 
 - 입력, 애니메이션, 이동, 스태미나, 피격 처리를 플레이어 상태 기준으로 묶었습니다.
 - 지상 콤보, 공중 공격, 구르기, 급강하 공격이 상태 전이 안에서 동작하도록 구성했습니다.
 
+<details>
+  <summary><strong>코드 보기</strong></summary>
+
 ```csharp
-if (jumpInputAction.action.WasPressedThisFrame())
+public void Update()
 {
-    Jump();
-}
-else if (attackInputAction.action.WasPressedThisFrame())
-{
-    if (PlayerFlags.Value.SwingCheck == false)
-        PlayerFlags.Value.SwingCheck = true;
-}
-else if (rollInputAction.action.WasPressedThisFrame())
-{
-    Roll();
+    PlayerFlags.Value.TriggerLocked = false;
+
+    if (jumpInputAction.action.WasPressedThisFrame())
+    {
+        Jump();
+    }
+    else if (attackInputAction.action.WasPressedThisFrame())
+    {
+        if (PlayerFlags.Value.SwingCheck == false)
+        {
+            PlayerFlags.Value.SwingCheck = true;
+        }
+    }
+    else if (rollInputAction.action.WasPressedThisFrame())
+    {
+        Roll();
+    }
+    else if (moveDownInputAction.action.WasPressedThisFrame())
+    {
+        FastDownAttack();
+    }
 }
 ```
 
 </details>
 
-<details>
-  <summary><strong>Object Pooling</strong></summary>
-
-  <br>
+### 오브젝트 풀링
 
 - 투사체, 히트 이펙트, 회복 오브젝트 등 반복 생성되는 객체를 풀링으로 관리했습니다.
 - 전투 중 빈번하게 생성되는 오브젝트를 재사용하도록 구성했습니다.
+
+<details>
+  <summary><strong>코드 보기</strong></summary>
 
 ```csharp
 public T GetObject<T>(string poolName) where T : Component
@@ -253,13 +254,13 @@ public void ReturnObject(string poolName, GameObject obj)
 
 </details>
 
-<details>
-  <summary><strong>UI / Transition Utilities</strong></summary>
-
-  <br>
+### 전환 및 UI 유틸리티
 
 - 화면 전환과 스테이지 연출은 별도 전환 시스템으로 분리했습니다.
 - UI 이동과 일부 지연 호출에는 DOTween을 보조적으로 사용했습니다.
+
+<details>
+  <summary><strong>코드 보기</strong></summary>
 
 ```csharp
 ScreenTransition.Play(new ScreenTransitionOptions
@@ -279,15 +280,15 @@ ScreenTransition.Play(new ScreenTransitionOptions
 
 </details>
 
-## Demo
+## 데모
 
 - [Move Tutorial](./Assets/11_Video/MoveTutorial.mp4)
 - [Attack Tutorial](./Assets/11_Video/AttackTutorial.mp4)
 - [Roll Tutorial](./Assets/11_Video/RollTutorial.mp4)
 
-## How to Run
+## 실행 환경
 
-- Unity Version: `6000.0.20f1`
-- Scenes:
+- Unity `6000.3.11f1`
+- Scene
   - `Assets/02_Scenes/Title.unity`
   - `Assets/02_Scenes/Game.unity`
