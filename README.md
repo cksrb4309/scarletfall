@@ -266,9 +266,7 @@ patternActions[2][1][3] = ChargeArrow;
 
 ## 데모
 
-- [Move Tutorial](./Assets/11_Video/MoveTutorial.mp4)
-- [Attack Tutorial](./Assets/11_Video/AttackTutorial.mp4)
-- [Roll Tutorial](./Assets/11_Video/RollTutorial.mp4)
+- [Web Demo](https://cksrb4309.github.io/Projects/scarlet_fall/index.html)
 
 ## 실행 환경
 
