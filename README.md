@@ -5,7 +5,7 @@
 
 ## 기술 스택
 
-`Unity` `C#` `ScriptableObject` `Input System` `URP`
+`Unity` `C#` `ScriptableObject`  `URP`
 
 ## 구현한 핵심 기능
 
